@@ -2,7 +2,7 @@ fs = 44.1e3; ts = 1/fs;
 OSR = 64;
 fBW = 20e3;
 
-in1 = 0; in2 = ~in1;
+in1 = 1; in2 = ~in1;
 if in1
     u = readlines('../verilog/modulator/up_n16r15.txt');
     u = nhex2dec(u(1:end-1), 16);
@@ -123,7 +123,7 @@ subplot(211)
 plot(10*log10((out_normfs - u_normfs).^2)); hold on
 grid on
 root_mse = rmse(u_normfs,out_normfs);
-title(sprintf("(error)^2 %E",root_mse))
+title(sprintf("rms error: %E",root_mse))
 subplot(212)
 plot(out_normfs, '*'); hold on
 plot(u_normfs, '--')
@@ -148,6 +148,9 @@ if in2
     sigpwr = OUT(fbin).^2;
     noisepwr = sum(OUT(setdiff((1:fBWbin), fbin)).^2);
     snr = 10*log10(sigpwr./noisepwr)
+
+else
+    writematrix(out./floatingptLSB , 'quantizer_level_output_QNS1_u_rand_input.txt')
 end 
 
 
