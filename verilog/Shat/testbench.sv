@@ -1,11 +1,13 @@
 module testbench;
     localparam N        = 32;
-    localparam IN_W     = 16;
-    localparam OUT_W    = 16;
-    localparam SH_W     = 16;
-    localparam R_IN     = 12;
-    localparam R_OUT    = 12;
-    localparam R_SH     = 12;
+    localparam K        = 32;
+    localparam INPUT_N  = 64;
+    localparam IN_W     = 20;
+    localparam OUT_W    = 20;
+    localparam SH_W     = 20;
+    localparam R_IN     = 18;
+    localparam R_OUT    = 18;
+    localparam R_SH     = 18;
 
     logic                       clock;
     logic                       reset;
@@ -14,10 +16,13 @@ module testbench;
     logic signed [OUT_W-1:0]    data_out;
     logic                       valid_out;
 
-    logic signed [SH_W-1:0]     input_data [N-1:0]; 
-    integer                     cnt;
+    logic signed [SH_W-1:0]     input_data [INPUT_N-1:0]; 
+    integer                     clock_cnt;
+    integer                     data_cnt;
+    integer                     out_cnt;
+    integer                     out_file;
 
-    Shat #(.N(N), .IN_W(IN_W), .OUT_W(OUT_W), .SH_W(SH_W), .R_IN(R_IN), .R_OUT(R_OUT), .R_SH(R_SH)) sh0
+    Shat #(.N(N), .IN_W(IN_W), .OUT_W(OUT_W), .SH_W(SH_W), .R_IN(R_IN), .R_OUT(R_OUT), .R_SH(R_SH), .ADD_STEP(2)) sh0
     (
         .clock      (clock),
         .reset      (reset),
@@ -42,37 +47,58 @@ module testbench;
     begin
         if (reset)
         begin
-            cnt         <= 0;
+            clock_cnt   <= 0;
+            data_cnt    <= 0;
             valid_in    <= 1'b0;
             data_in     <= '0;
         end
         else
         begin
-            if (cnt == N)
+            clock_cnt <= clock_cnt + 1;
+
+            if (data_cnt == INPUT_N)
             begin
                 valid_in    <= 1'b0;
                 data_in     <= '0;
             end
             else
             begin
-                valid_in    <= 1'b1;
-                data_in     <= input_data[cnt];
-                cnt         <= cnt + 1;
+                if (clock_cnt % K == 0)
+                begin
+                    valid_in    <= 1'b1;
+                    data_in     <= input_data[data_cnt];
+                    data_cnt    <= data_cnt + 1;
+                end
+                else
+                begin
+                    valid_in    <= 1'b0;
+                    data_in     <= '0;
+                end
             end
         end
     end
 
     always @(negedge clock)
     begin
+        if (reset)
+        begin
+            out_cnt <= 0;
+        end
         if (valid_out)
         begin
-            $display("%d", data_out);
+            out_cnt <= out_cnt + 1;
+            $fdisplay(out_file, "%d", data_out);
+        end
+        if (out_cnt == INPUT_N)
+        begin
+            $fclose(out_file);
             $finish;
         end
     end
 
     initial
     begin
+        out_file = $fopen("../../python/Shat/data/hw_results.txt");
         clock = 0;
         reset = 1;
         @(negedge clock);
