@@ -54,4 +54,4 @@ clean:
         inter.fsdb novas* verdiLog	
 
 nuke:	clean
-	rm -rvf verdi_config_file *.vg *.rep *.db *.chk *.log *.out *.ddc *.svf DVEfiles/
+	rm -rvf verdi_config_file *.vg *.rep *.db *.chk *.log *.out *.ddc *.svf .inter.fsdb.tbsim DVEfiles/

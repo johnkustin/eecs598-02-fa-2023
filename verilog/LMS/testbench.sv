@@ -1,15 +1,20 @@
 module testbench;
     localparam N        = 32;
     localparam K        = 32;
-    localparam MU       = 52429;
+    localparam MU       = 102;
     localparam OFFSET   = 2621;
     localparam IN_W     = 20;
     localparam OUT_W    = 20;
-    localparam MU_W     = 20;
+    localparam MU_W     = 8;
     localparam R_IN     = 18;
     localparam R_OUT    = 18;
-    localparam R_MU     = 18;
-    localparam ADD_STEP = 2;
+    localparam R_MU     = 9;
+    localparam ADD_STEP = 4;
+    localparam ADJ_LUT_IN_W = 10;
+    localparam ADJ_LUT_OUT_W = 12;
+    localparam R_ADJ_LUT_IN = 10;
+    localparam R_ADJ_LUT_OUT = 0;
+
 
     logic                       clock;
     logic                       reset;
@@ -17,7 +22,7 @@ module testbench;
     logic signed [IN_W-1:0]     data_u_in;
     logic                       valid_e_in;
     logic signed [IN_W-1:0]     data_e_in;
-    logic signed [OUT_W-1:0]    data_out [N-1:0];
+    logic [N-1:0] [OUT_W-1:0]   data_out; // Weird error with packed signed 2D arrays, easier to cast after-the-fact
     logic                       valid_out;
 
     logic signed [IN_W-1:0]     u_in [N-1:0];
@@ -28,7 +33,8 @@ module testbench;
     integer out_file;
     integer out_cnt;
 
-    LMS # (.N(N), .IN_W(IN_W), .OUT_W(OUT_W), .MU_W(MU_W), .R_IN(R_IN), .R_OUT(R_OUT), .R_MU(R_MU), .MU(MU), .OFFSET(OFFSET), .ADD_STEP(ADD_STEP)) lms0
+    LMS # (.N(N), .IN_W(IN_W), .OUT_W(OUT_W), .MU_W(MU_W), .ADJ_LUT_IN_W(ADJ_LUT_IN_W), .ADJ_LUT_OUT_W(ADJ_LUT_OUT_W), .R_IN(R_IN), .R_OUT(R_OUT), .R_MU(R_MU), 
+            .R_ADJ_LUT_IN(R_ADJ_LUT_IN), .R_ADJ_LUT_OUT(R_ADJ_LUT_OUT), .MU(MU), .OFFSET(OFFSET), .ADD_STEP(ADD_STEP)) lms0
     (
         .clock      (clock),
         .reset      (reset),
@@ -110,7 +116,7 @@ module testbench;
                 $fdisplay(out_file, "\n\nITER NUM %d", out_cnt);
                 for (int i = 0; i < N; i = i + 1)
                 begin
-                    $fdisplay(out_file, "%d", data_out[i]);
+                    $fdisplay(out_file, "%d", $signed(data_out[i]));
                 end
             end
             if (out_cnt == N)

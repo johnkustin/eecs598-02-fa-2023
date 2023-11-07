@@ -1,0 +1,18 @@
+Some things to consider when using LMS module...
+
+OFFSET value must be provided on R_IN
+R_MU >= 0 (this should be true anyways since we know R < 1)
+R_OUT >= (this should always be true, we are dealing with small numbers)
+The ADD_STEP parameter will ease timing constraints if needed.
+
+The big things to determine when using this module are
+- The fixed point representation for the adjuster into the lut
+- The fixed point representation for the adjuster out of the lut
+- Note, the # of entries to the LUT will be 2^(N-1), where N is size of into lut
+- The number of bits per entry to the LUT will be N-1, where N is the size of the adjuster out of the lut
+
+In order to find these values, the process can be completed in the python/adjAnalysis.py module
+- Will want to determine a desired size for the LUT (N1)
+- Should loop through all of the desired adj_lut_in values, make sure that you choose an R1 value that accurately represents both the min and the max
+- Select an appropriate N2 value. Make sure that you select an R2 value that can accurately represent the reciprocol of both the min and the max
+- hard to handle everything correct all of the time, better to just select a range to be accurate within
