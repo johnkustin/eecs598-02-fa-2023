@@ -15,7 +15,7 @@ P = 2;            % sigma delta order
 M = 2^P;          % number of levels do the quantitizer
 NbufFill = Li*K;
 NFFT = L * K - NbufFill;
-
+quantizerType = "orig"; %options: "mid-tread", "mid-riser", "orig"
 
 rng(7283723);
 
@@ -81,10 +81,10 @@ q = zeros(L*K, NQNS);
 
 for n0=Li*K:L*K
     % discrete
-    u0(n0) = step(QNSx{1}, up(n0));
+    u0(n0) = step(QNSx{1}, up(n0), quantizerType);
     
     yq(n0) = - w0'*u0(n0:-1:n0-NW0+1);
-    y0(n0) = step(QNSx{3}, yq(n0));
+    y0(n0) = step(QNSx{3}, yq(n0), quantizerType);
 
     % physical
     yp(n0) = wop'*up(n0:-1:n0-NW*K+1);
@@ -92,7 +92,7 @@ for n0=Li*K:L*K
     ep(n0) = dp(n0) + sp'*y0(n0:-1:n0-NW*K+1);
     
     % discrete
-    e0(n0) = step(QNSx{4}, ep(n0));
+    e0(n0) = step(QNSx{4}, ep(n0), quantizerType);
     
     if mod(n0, K)==0
         n = n0/K;
@@ -114,7 +114,7 @@ for n0=Li*K:L*K
         n1 = 1;
         reset(QNSx{2});
     end
-    w0(n1) = step(QNSx{2}, w(floor((n1-1)/K+0.5)+1)/K);
+    w0(n1) = step(QNSx{2}, w(floor((n1-1)/K+0.5)+1)/K, quantizerType);
     n1 = n1 + 1;
 
     for i=1:NQNS
@@ -127,7 +127,8 @@ end
 figure(314123)
 for i = 1:4
     subplot(4,1,i)
-    histogram(yqns(NbufFill:end,i))
+    [counts, groupnames] = groupcounts(yqns(NbufFill:end,i));
+    stem(groupnames, counts)
     title(sprintf('QNS %d',i))
     xlabel('QNS output')
 end
@@ -152,7 +153,7 @@ plot((0:length(ep_down_sampled)-1)/fs*1e3-Li/fs*1e3, ep_down_sampled); hold off;
 legend('e','e_p')
 set(gca,'XLim',[0 (L-Li)/fs*1e3]);
 xlabel('Time (ms)'); ylabel('Level');
-saveas(gcf, './results/fig1.png')
+saveas(gcf, './figures/fig1.png')
 
 figure(2);
 [hw0, f_hw0] = freqz(w0,1,1024*K,fs*K);
@@ -170,7 +171,7 @@ legend('w_0 filter', 'w filter','Location','southwest');
 ylabel('Frequency Response Ampltitude (dB)');
 xlabel('Frequency (kHz)');
 set(gcf,'Name','Residual error PSD');
-saveas(gcf, './results/fig2.png')
+saveas(gcf, './figures/fig2.png')
 
 figure(3);
 [Pd, f_pd] = pwelch(dp(end/2:end), [], [], K*128, K*fs);
@@ -183,7 +184,7 @@ legend('ANC off', 'ANC on','Location','southeast');
 ylabel('Noise power spectral density (dB)');
 xlabel('Frequency (kHz)');
 set(gcf,'Name','Residual error PSD');
-saveas(gcf, './results/fig3.png')
+saveas(gcf, './figures/fig3.png')
 
 fprintf('Residual Noise Power: %f\n', mean(e(end*3/4:end).^2));
 fprintf('Noise Power: %f\n', mean(d(end*3/4:end).^2));
