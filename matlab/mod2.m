@@ -1,19 +1,22 @@
 fs = 44.1e3; ts = 1/fs;
 OSR = 64;
+K = OSR;
+L = 3000;
 fBW = 20e3;
+rng(7283723);
 
-in1 = 1; in2 = ~in1;
+in1 = 0; in2 = ~in1;
 if in1
-    u = readlines('../verilog/modulator/up_n16r15.txt');
-    u = nhex2dec(u(1:end-1), 16);
+    u = fp_quantizer(randn(K*L,1), 19, 15)
     t = 0:ts/OSR: length(u)/fs - ts/OSR;
+    writematrix(ndec2hex(u,19), '../verilog/QNS/sim/rand_7283723_n19r15_OSR_64_fs_44p1k.txt')
+
 elseif in2
     f = 1e3;
     t = (0:ts/OSR:OSR*1/f - ts/OSR)';
-    u = fp_quantizer(1/2 * sin(2*pi*1e3*t), 16, 15);
+    u = fp_quantizer(1/2 * sin(2*pi*1e3*t), 19, 15);
+    writematrix(ndec2hex(u, 19), '../verilog/QNS/sim/sine_n19r15_fin_1k_0p5VFS_OSR_64_fs_44p1k.txt')
 end
-
-% u = fi(1/2 * sin(2*pi*1e3*t), true, 16, 15);
 
 N = length(u);
 
@@ -27,79 +30,42 @@ sigma1reg = zeros(1,N);%fi(zeros(1,N), true, 17, 15);
 delta2adder = zeros(1,N);%fi(zeros(1,N), true, 17, 15);
 sigma2reg = zeros(1,N);%fi(zeros(1,N), true, 18, 15);
 
-out = zeros(1,N);%fi(zeros(1,N), true, 3, 1);
+out = zeros(1,N);
 level_i = zeros(1,N);
-% out = zeros(1,N);
-
-LSB = 2^14;
 
 e = zeros(1,N); y = zeros(1,N); reg1=zeros(1,N); reg2=zeros(1,N);
 v = zeros(1,N);
 
 % NFS = -(2^15 - 1); PFS = 2^15 - 1; % not 2's comp
-FS = 2^15 - 1;
-reg1(1) = FS/2;%NFS/2; 
-reg2(1) = FS/2;%PFS/2;
+scaling = 2^14;
+reg1(1) = 0;%;scaling/2;%NFS/2; 
+reg2(1) = 0;%;scaling/2;%PFS/2;
 for n = 1:N-1 % in cycle 1, the system was reset to I.C
     if rem(n, 2000) == 0
         fprintf("%.2f %%\n",n/N * 100)
     end
     
     y(n) = u(n) - 2 * reg1(n) + reg2(n);
-    y_dith = y(n) + sign(1/2 - rand()) * round(rand());
+    y_dith = y(n); %+ sign(1/2 - rand()) * round(rand());
     if y_dith > 0 % random LSB
-            v(n) = 2^(-1);
-        if y_dith > FS % pos full scale
-            v(n) = 2^0;
+            v(n) = 1;%2^(-1);
+        if y_dith > scaling % fx pt resolution scali
+            v(n) = 3;%2^0;
         end
     elseif y_dith < 0
-        v(n) = -2^(-1);
-        if y_dith < -FS % neg full scale
-            v(n) = -2^0;
+        v(n) = -1;%-2^(-1);
+        if y_dith < -scaling % neg full scale
+            v(n) = -3;%-2^0;
         end
-    else
-        v(n) = 0;
     end
 
-    v_scaled = v(n) * FS; 
+    v_scaled = v(n) * scaling; 
     e(n) = y(n) - v_scaled;
-    if n > 1
-        if e(n) > e(n-1)
-            e(n) - e(n-1);
-%             figure; stem(20*log10(abs(e(1:end/2)./FS)))
-        end
-    end
-    reg1(n+1) = -e(n);
     reg2(n+1) = reg1(n);
+    reg1(n+1) = -e(n);
 
-%       delta1adder(n) = u(n) - (fb(n-1) * 2^(16-3));
-% %     delta1adder(n)
-%     sigma1reg(n) = sigma1reg(n-1) + delta1adder(n);
-% %     sigma1reg(n+1)
-%     delta2adder(n) = sigma1reg(n-1) - (fb(n-1) * 2^(17-3));
-% %     delta2adder(n)
-%     sigma2reg(n) = sigma2reg(n-1) + delta2adder(n);
-% %     sigma2reg(n+1)
-% 
-% %     out(n) = bpquantizer(sigma2reg(n), 4, 2^15 - 1, -2^15);
-% if sigma2reg(n) > 1/4 * 2^16 - 1
-%     if sigma2reg(n) < 3/4 * 2^15 - 1
-%         out(n) = 1/2 *(2^15 - 1);
-%     end
-%     out(n) = 2^15 - 1;
-% end
-% if sigma2reg(n) < -1/4 * 2^15 - 1
-%     if sigma2reg(n) < -3/4 * 2^15 - 1
-%         out(n) = -2^15;
-%     end
-%     out(n) = -2^15/2;
-% end
-% %     level_i(n) = min(max(round((sigma2reg(n)/LSB + 2)-1/2),0),4-1);
-% %     out(n) = LSB*((level_i(n)'+1/2)-2);
-% %     out(n+1)
-% %     out(n+1) = out(n+1) * LSBhalfstep;
-%     fb(n) = out(n);
-%     fb(n)
+
+
 end
 out = v;
 
@@ -141,7 +107,7 @@ if in2
     ylabel('Magnitude (dBFS)')
     title(sprintf("%d pt FFT", N))
     grid on
-    writematrix(out./floatingptLSB , 'quantizer_level_output_sine_fin_1k_0p5VFS_OSR_64_fs_44p1k.txt')
+    writematrix(out'./floatingptLSB , '../verilog/QNS/sim/quantizer_level_output_sine_fin_1k_0p5VFS_OSR_64_fs_44p1k.txt')
 
     fbin = ceil(f * N ./ fs ./ OSR) + 1;
     fBWbin = ceil(fBW * N ./ fs ./ OSR) + 1;
@@ -150,7 +116,7 @@ if in2
     snr = 10*log10(sigpwr./noisepwr)
 
 else
-    writematrix(out./floatingptLSB , 'quantizer_level_output_QNS1_u_rand_input.txt')
+    writematrix(out'./floatingptLSB , '../verilog/QNS/sim/quantizer_level_output_QNS1_u_rand_input.txt')
 end 
 
 
