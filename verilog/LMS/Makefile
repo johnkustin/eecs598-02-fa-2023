@@ -11,6 +11,10 @@
 # The information contained here (in the rules for those vg files) will be 
 # similar to the information in those scripts but that seems hard to avoid.
 #
+export MK_COURSE_NAME = EECS598-002
+export MK_DESIGN_NAME = LMS
+export MK_USE_NUM_CORES = 4
+export MK_MEM_SUFFIX = typ_1d05_25
 
 VCS = SW_VCS=2020.12-SP2-1 vcs -sverilog +vc -Mupdate -line -full64 +define+
 LIB = /afs/umich.edu/class/eecs470/lib/verilog/lec25dscc25.v
@@ -22,8 +26,8 @@ all:	simv
 # Modify starting here
 #####
 
-TESTBENCH = testbench.sv
-SIMFILES = LMS.sv
+TESTBENCH = test/testbench.sv
+SIMFILES = src/LMS.sv
 SYNFILES = LMS.vg
 
 
@@ -38,14 +42,25 @@ dve:	$(SIMFILES) $(TESTBENCH)
 
 .PHONY: dve
 
-LMS.vg: LMS.sv synth.tcl
-	dc_shell-t -f synth.tcl | tee synth.out
+LMS.vg: LMS.sv old_scripts/synth.tcl
+	dc_shell-t -f old_scripts/synth.tcl | tee synth.out
 
 syn_simv:	$(SYNFILES) $(TESTBENCH)
 	$(VCS) $(TESTBENCH) $(SYNFILES) $(LIB) -o syn_simv | tee syn_simv.log
 
 syn:	syn_simv
 	./syn_simv | tee syn_program.out | tee syn.log
+
+syn_NEW:
+		-mkdir -p logs
+		dc_shell -f scripts/synth.tcl | tee logs/synth.log
+		-mkdir -p temp_files
+		-mv alib-52 temp_files/
+		-mv *_dclib temp_files/
+		-mv command.log temp_files/
+		-mv default.svf temp_files/
+		-mkdir -p export
+		-cp -f memory/db/*_${MK_MEM_SUFFIX}_ccs.db export/
 
 clean:
 	rm -rvf simv *.daidir csrc vcs.key program.out \
@@ -54,4 +69,4 @@ clean:
         inter.fsdb novas* verdiLog	
 
 nuke:	clean
-	rm -rvf verdi_config_file *.vg *.rep *.db *.chk *.log *.out *.ddc *.svf .inter.fsdb.tbsim DVEfiles/
+	rm -rvf verdi_config_file *.vg *.rep *.db *.chk *.log *.out *.ddc *.svf .inter.fsdb.tbsim DVEfiles/ export/ logs/ reports/ results/ temp_files/ LMS_dclib/

@@ -40,7 +40,7 @@ module testbench;
 
     initial
     begin
-        $readmemh("inputVals.mem", input_data);
+        $readmemh("data/inputVals.mem", input_data);
     end
 
     always @(negedge clock)

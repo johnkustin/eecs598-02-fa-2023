@@ -88,7 +88,7 @@ module LMS # (parameter N = 32, IN_W = 20, OUT_W = 20, MU_W = 8, ADJ_LUT_IN_W = 
 
     initial
     begin
-        $readmemh("adjRecipLutVals.mem", ADJ_RECIP_LUT);
+        $readmemh("data/adjRecipLutVals.mem", ADJ_RECIP_LUT);
     end
 
     assign data_out     = final_res_r;

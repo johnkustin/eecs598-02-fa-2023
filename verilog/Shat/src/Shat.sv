@@ -40,7 +40,7 @@ module Shat # (parameter N = 32, IN_W = 16, OUT_W = 16, SH_W = 16, R_IN = 12, R_
 
     initial 
     begin
-        $readmemh("shVals.mem", sh);
+        $readmemh("data/shVals.mem", sh);
     end
 
     assign data_out     = final_sum_r;

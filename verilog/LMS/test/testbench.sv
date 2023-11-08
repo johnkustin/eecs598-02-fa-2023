@@ -54,8 +54,8 @@ module testbench;
 
     initial
     begin
-        $readmemh("uVals.mem", u_in);
-        $readmemh("eVals.mem", e_in);
+        $readmemh("data/uVals.mem", u_in);
+        $readmemh("data/eVals.mem", e_in);
     end
 
     always @(negedge clock)
