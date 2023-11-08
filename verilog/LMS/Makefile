@@ -23,8 +23,8 @@ all:	simv
 #####
 
 TESTBENCH = testbench.sv
-SIMFILES = Shat.sv
-SYNFILES = Shat.vg
+SIMFILES = LMS.sv
+SYNFILES = LMS.vg
 
 
 #####
@@ -38,7 +38,7 @@ dve:	$(SIMFILES) $(TESTBENCH)
 
 .PHONY: dve
 
-Shat.vg: Shat.sv synth.tcl
+LMS.vg: LMS.sv synth.tcl
 	dc_shell-t -f synth.tcl | tee synth.out
 
 syn_simv:	$(SYNFILES) $(TESTBENCH)
@@ -54,4 +54,4 @@ clean:
         inter.fsdb novas* verdiLog	
 
 nuke:	clean
-	rm -rvf verdi_config_file *.vg *.rep *.db *.chk *.log *.out *.ddc *.svf DVEfiles/
+	rm -rvf verdi_config_file *.vg *.rep *.db *.chk *.log *.out *.ddc *.svf .inter.fsdb.tbsim DVEfiles/

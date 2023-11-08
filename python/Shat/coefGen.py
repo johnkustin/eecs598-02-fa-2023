@@ -26,11 +26,11 @@ def fixedPointQuantizer(dataPoint, N, R):
     else:
         return toReturn
 
-N = 16
-R = 12
+N = 20
+R = 18
 
 valsToWrite = []
-with open("floatVals.txt", 'r') as file:
+with open("data/floatVals.txt", 'r') as file:
     for data in file:
         valsToWrite.append(hex(convert2sCompl(fixedPointQuantizer(float(data), N, R), N))[2:])
 
