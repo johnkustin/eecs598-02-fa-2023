@@ -26,28 +26,22 @@ def Shat(u, sh):
 NS_OR_NW = 32
 
 sh = np.zeros(32)
-u = np.zeros(64)
+u = np.zeros(3000)
 
-with open("data/floatVals.txt", 'r') as file:
+with open("data/sh.txt", 'r') as file:
     i = 0
     for line in file:
         sh[i] = float(line.strip())
         i += 1
 
-with open("data/inputVals.txt", 'r') as file:
+with open("data/u.txt", 'r') as file:
     i = 0
     for line in file:
         u[i] = float(line.strip())
         i += 1
-    
-sum = 0
-for i in range(len(sh)):
-    sum += sh[i] * sh[i]
-
-print(sum)
 
 results = Shat(u, sh)
 
-with open("data/sim_results.txt", 'w') as file:
+with open("data/full_sim_results.txt", 'w') as file:
     for res in results:
         file.write(str(res) + '\n')

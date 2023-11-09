@@ -16,7 +16,7 @@ with open("data/hw_results.txt", 'r') as file:
     for line in file:
         rawResults.append(int(line.strip()))
 
-R = 18
+R = 31
 
 realResults = fixedToFloatData(rawResults, R)
 

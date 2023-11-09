@@ -2,8 +2,8 @@ set_max_transition 150 ${DESIGN_NAME}
 set_input_transition 80 [all_inputs]
 set_max_transition 80 [all_outputs]
 
-set clock_period 20
-set clock_uncertainty [expr $clock_period * 0.10]
+set clock_period 700
+set clock_uncertainty [expr $clock_period * 0.1]
 set clock_transition 0.080
 set clock_latency 0.2
 

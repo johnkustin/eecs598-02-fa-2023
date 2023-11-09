@@ -1,13 +1,13 @@
 module testbench;
     localparam N        = 32;
     localparam K        = 32;
-    localparam INPUT_N  = 64;
-    localparam IN_W     = 20;
-    localparam OUT_W    = 20;
-    localparam SH_W     = 20;
-    localparam R_IN     = 18;
-    localparam R_OUT    = 18;
-    localparam R_SH     = 18;
+    localparam INPUT_N  = 3000;
+    localparam IN_W     = 32;
+    localparam OUT_W    = 32;
+    localparam SH_W     = 32;
+    localparam R_IN     = 31;
+    localparam R_OUT    = 31;
+    localparam R_SH     = 30;
 
     logic                       clock;
     logic                       reset;
@@ -16,13 +16,13 @@ module testbench;
     logic signed [OUT_W-1:0]    data_out;
     logic                       valid_out;
 
-    logic signed [SH_W-1:0]     input_data [INPUT_N-1:0]; 
+    logic signed [IN_W-1:0]     input_data [INPUT_N-1:0]; 
     integer                     clock_cnt;
     integer                     data_cnt;
     integer                     out_cnt;
     integer                     out_file;
 
-    Shat #(.N(N), .IN_W(IN_W), .OUT_W(OUT_W), .SH_W(SH_W), .R_IN(R_IN), .R_OUT(R_OUT), .R_SH(R_SH), .ADD_STEP(2)) sh0
+    Shat #(.N(N), .IN_W(IN_W), .OUT_W(OUT_W), .SH_W(SH_W), .R_IN(R_IN), .R_OUT(R_OUT), .R_SH(R_SH)) sh0
     (
         .clock      (clock),
         .reset      (reset),

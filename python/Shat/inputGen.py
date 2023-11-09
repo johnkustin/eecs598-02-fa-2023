@@ -26,15 +26,15 @@ def fixedPointQuantizer(dataPoint, N, R):
     else:
         return toReturn
 
-N = 20
-R = 18
+N = 32
+R = 31
 
 valsToWrite = []
-with open("data/inputVals.txt", 'r') as file:
+with open("data/u.txt", 'r') as file:
     for data in file:
         valsToWrite.append(hex(convert2sCompl(fixedPointQuantizer(float(data), N, R), N))[2:])
 
-with open("../../verilog/Shat/inputVals.mem", 'w') as file:
+with open("../../verilog/Shat/data/inputVals.mem", 'w') as file:
     for cnt, val in enumerate(valsToWrite):
         if (cnt == len(valsToWrite)-1):
             file.write(val)
