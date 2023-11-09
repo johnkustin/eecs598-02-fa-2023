@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 
 
-module mod2 #(
+module mod2_unsigned #(
     parameter INPUT_WIDTH = 16
 ) (
     input clk,

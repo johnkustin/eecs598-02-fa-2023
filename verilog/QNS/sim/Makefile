@@ -13,7 +13,7 @@
 #
 
 VCS = SW_VCS=2020.12-SP2-1 vcs -sverilog +vc -Mupdate -line -full64 +define+
-LIB = /afs/umich.edu/class/eecs470/lib/verilog/lec25dscc25.v
+LIB = /afs/umich.edu/class/eecs598-002/SAED32/SAED32_EDK/lib/stdcell_rvt/verilog/saed32nm.v 
 
 all:	simv
 	./simv | tee program.out
@@ -22,9 +22,9 @@ all:	simv
 # Modify starting here
 #####
 
-TESTBENCH = tb_mod2_sine.sv
+TESTBENCH = test_mod2_sine.sv
 SIMFILES = ../src/mod2.v ./H_cic_dec_64_N3R0_signed.v
-SYNFILES = ../results/mod2.mapped.v
+SYNFILES = ../results/mod2.mapped.v ./H_cic_dec_64_N3R0_signed.v
 
 
 #####
@@ -38,11 +38,11 @@ dve:	$(SIMFILES) $(TESTBENCH)
 
 .PHONY: dve
 
-mod2.vg: $(SIMFILES) synth.tcl
+mod2.vg: $(SIMFILES) ../scripts/synth.tcl
 	dc_shell-t -f synth.tcl | tee synth.out
 
 syn_simv:	$(SYNFILES) $(TESTBENCH)
-	$(VCS) $(TESTBENCH) $(SYNFILES) $(LIB) -o syn_simv | tee syn_simv.log
+	$(VCS) +compsdf $(TESTBENCH) $(SYNFILES) $(LIB) -o syn_simv | tee syn_simv.log
 
 syn:	syn_simv
 	./syn_simv | tee syn_program.out | tee syn.log

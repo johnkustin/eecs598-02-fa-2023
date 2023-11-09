@@ -14,7 +14,7 @@ puts "PDK path at $PDK_PATH"
 set DESIGN_NAME $::env(MK_DESIGN_NAME)
 set RTL_SOURCE_FILES  [glob -nocomplain src/*.v	src/*.sv src/*.vh src/*.svh]
 set NETLIST_FILES ""
-set DESIGN_DEFINES ""
+set DESIGN_DEFINES "IN_W=19 OUT_W=3 YY_FB=16384"
 set DESIGN_PATH          "[pwd]"
 set REPORTS_DIR "${DESIGN_PATH}/reports"
 set RESULTS_DIR "${DESIGN_PATH}/results"
@@ -30,6 +30,7 @@ set MEM_SUFFIX $::env(MK_MEM_SUFFIX)
 
 # set MAX_LIBRARY_SET               [glob -nocomplain "${PDK_PATH}/lib/stdcell_rvt/db_ccs/saed32rvt_ss0p95v125c.db"]
 set TYP_LIBRARY_SET               [glob -nocomplain "${PDK_PATH}/lib/stdcell_rvt/db_ccs/saed32rvt_tt1p05v25c.db"]
+set TYP_HVT_LIBRARY_SET	 [glob -nocomplain "${PDK_PATH}/lib/stdcell_rvt/db_ccs/saed32rvt_tt1p05v25c.db"] 
 # set MIN_LIBRARY_SET               [glob -nocomplain "${PDK_PATH}/lib/stdcell_rvt/db_ccs/saed32rvt_ff1p16vn40c.db"]
 
 set corner_case "typ"
@@ -79,7 +80,7 @@ if { ! [file exists ${DESIGN_NAME}_dclib] } { file mkdir ${DESIGN_NAME}_dclib }
 define_design_lib WORK -path ${DESIGN_PATH}/${DESIGN_NAME}_dclib
 
 if { [llength $NETLIST_FILES] > 0} { read_verilog -netlist $NETLIST_FILES }
-if { ![analyze -define ${DESIGN_DEFINES} -f sverilog $RTL_SOURCE_FILES] } { exit 1 }
+if { ![analyze -define ${DESIGN_DEFINES} -f sverilog $RTL_SOURCE_FILES ]  } { exit 1 }
 elaborate ${DESIGN_NAME}
 
 check_design -multiple_designs

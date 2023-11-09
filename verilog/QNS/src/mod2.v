@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
 
+
 module mod2 #(
     parameter IN_W = 19, // s(19, 15) signed
     parameter OUT_W = 3, // 1 for sign (bipolar quantizer), 2 for a 4 level (bipolar) quantizer
@@ -13,6 +14,7 @@ module mod2 #(
     output logic signed [IN_W-1:0] out_scaled
 
 );
+initial $sdf_annotate("../results/mod2.mapped.sdf");
 logic signed [IN_W-1:0] inp, v_scaled; // x
 logic signed [IN_W:0] yy; // yy
 logic signed [IN_W:0] e, reg1, reg2; // e

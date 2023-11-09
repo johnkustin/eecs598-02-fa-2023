@@ -1,6 +1,6 @@
 `timescale 1ns/1fs
 
-module test_mod2;
+module test_mod2_sine;
 
 // string dataPath = "./";
 string fileName = "sine_n19r15_fin_1k_0p5VFS_OSR_64_fs_44p1k.txt";
@@ -26,7 +26,7 @@ integer i;
 integer f;
 
 initial begin
-    $dumpfile("test_mod2.vcd");
+    $dumpfile("test_mod2_sine.vcd");
     $dumpvars(0);
     $readmemh(fileName, inArr);     
 end
