@@ -29,12 +29,13 @@ set MEM_SUFFIX $::env(MK_MEM_SUFFIX)
 #  Target technology logical libraries
 
 # set MAX_LIBRARY_SET               [glob -nocomplain "${PDK_PATH}/lib/stdcell_rvt/db_ccs/saed32rvt_ss0p95v125c.db"]
-set TYP_LIBRARY_SET               [glob -nocomplain "${PDK_PATH}/lib/stdcell_rvt/db_ccs/saed32rvt_tt1p05v25c.db"]
-set TYP_HVT_LIBRARY_SET	 [glob -nocomplain "${PDK_PATH}/lib/stdcell_rvt/db_ccs/saed32rvt_tt1p05v25c.db"] 
+set TYP_LIBRARY_SET                 [glob -nocomplain "${PDK_PATH}/lib/stdcell_rvt/db_ccs/saed32rvt_tt1p05v25c.db"]
+set TYP_HVT_LIBRARY_SET	            [glob -nocomplain "${PDK_PATH}/lib/stdcell_hvt/db_ccs/saed32rvt_tt1p05v25c.db"] 
+set TYP_HVT_LOWV_LIBRARY_SET        [glob -nocomplain "${PDK_PATH}/lib/stdcell_hvt/db_ccs/saed32hvt_tt0p78v25c.db"]
 # set MIN_LIBRARY_SET               [glob -nocomplain "${PDK_PATH}/lib/stdcell_rvt/db_ccs/saed32rvt_ff1p16vn40c.db"]
 
 set corner_case "typ"
-set TARGET_LIBRARY_FILES        ${TYP_LIBRARY_SET}
+set TARGET_LIBRARY_FILES        ${TYP_HVT_LOWV_LIBRARY_SET}
 set ADDITIONAL_LINK_LIB_FILES   "[glob -nocomplain ${DESIGN_PATH}/memory/db/*_${MEM_SUFFIX}_ccs.db]
                                    [glob -nocomplain ${DESIGN_PATH}/blocks/*/export/*.db]"
 
@@ -80,7 +81,7 @@ if { ! [file exists ${DESIGN_NAME}_dclib] } { file mkdir ${DESIGN_NAME}_dclib }
 define_design_lib WORK -path ${DESIGN_PATH}/${DESIGN_NAME}_dclib
 
 if { [llength $NETLIST_FILES] > 0} { read_verilog -netlist $NETLIST_FILES }
-if { ![analyze -define ${DESIGN_DEFINES} -f sverilog $RTL_SOURCE_FILES ]  } { exit 1 }
+if { ![analyze -define ${DESIGN_DEFINES} -f verilog $RTL_SOURCE_FILES -library ${DESIGN_PATH}/${DESIGN_NAME}_dclib]  } { exit 1 }
 elaborate ${DESIGN_NAME}
 
 check_design -multiple_designs
@@ -124,7 +125,7 @@ check_design > ${REPORTS_DIR}/${DESIGN_NAME}.check_design.rpt
 
 set_app_var compile_ultra_ungroup_dw true
 ungroup -all -flatten
-# append compile_ultra_options " -no_autoungroup"
+# append compile_ultra_options "-spg -gate_clock -no_autoungroup"
 # puts "Information: Starting compile_ultra with the following flags: $compile_ultra_options"
 # compile_ultra $compile_ultra_options
 compile_ultra

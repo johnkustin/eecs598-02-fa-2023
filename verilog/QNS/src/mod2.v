@@ -8,33 +8,31 @@ module mod2 #(
     ) ( 
     input clk,
     input rstn,
-    input en,
+    input wire en,
     input signed [IN_W-1:0] in, // (N,R) = s(19,15) signed
-    output logic signed [OUT_W-1:0] out, // output  signed,
-    output logic signed [IN_W-1:0] out_scaled
+    output wire signed [OUT_W-1:0] out, // output  signed,
+    output wire signed [IN_W-1:0] out_scaled
 
 );
-initial $sdf_annotate("../results/mod2.mapped.sdf");
-logic signed [IN_W-1:0] inp, v_scaled; // x
-logic signed [IN_W:0] yy; // yy
-logic signed [IN_W:0] e, reg1, reg2; // e
-logic signed [OUT_W-1:0] v; // yy
+
+reg signed [IN_W-1:0] inp, v_scaled; // x
+reg signed [IN_W:0] yy; // yy
+reg signed [IN_W:0] e, reg1, reg2; // e
+reg signed [OUT_W-1:0] v; // yy
 
 localparam V_SCALING = (IN_W - OUT_W - 1 - 1); // see comments below
 always @(*) begin // 2 bit, bipolar quantizer
-    if (en) begin
         yy = inp - (reg1 <<< 1) + reg2; 
         if (yy >= 0) begin
             if (yy >= YY_FS) v = 3'd3; 
             else v = 3'd1; // 3'd1
         end  // yy >= 0
         else begin // yy < 0
-            if (-yy >= YY_FS) v = -3'd3;
-            else v = -3'd1;
+            if (-yy >= YY_FS) v = $signed(-3'd3);
+            else v = $signed(-3'd1);
         end // yy < 0
         v_scaled = v <<< V_SCALING; // IN_W - OUT_W to scale "v" to max amplitude. -1 is so we dont count the sign bit in the shift
         e = yy - v_scaled;
-    end
 end
 
 assign out = v;
@@ -56,14 +54,14 @@ assign out_scaled = v_scaled;
 // fp_quantizer(0.5, 19, 15) == 1 * 2^14 = 16384 
 
 always @(posedge clk or negedge rstn) begin
-    if (rstn == 0) begin
-        reg2 <= 0; reg1<= 0; inp <= 0;
-    end
-    else begin
-        inp <= in;
-        reg2 <= reg1; 
-        reg1 <= -e;
-    end
+        if (rstn == 0) begin
+            reg2 <= 0; reg1<= 0; inp <= 0;
+        end
+        else begin
+            inp <= in;
+            reg2 <= reg1; 
+            reg1 <= -e;
+        end
 end
 
 

@@ -2,7 +2,7 @@ set_max_transition 150 ${DESIGN_NAME}
 set_input_transition 80 [all_inputs]
 set_max_transition 80 [all_outputs]
 
-set clock_period 10
+set clock_period 700
 set clock_uncertainty [expr $clock_period * 0.10]
 set clock_transition 0.080
 set clock_latency 0.2
@@ -24,3 +24,11 @@ set_output_delay -min [expr $clock_period * 0.2] [get_ports -filter "direction =
 
 set_false_path -from [get_ports -filter "direction == in" rstn]
 set_false_path -from [get_ports -filter "direction == in" en]
+
+####### Power Optimization #######
+set_power_low_power_placement true
+#set_leakage_optimization true # done by compile_ultra
+set_dynamic_optimization true
+
+#read_saif -input your.saif -instance_name test_/dut -auto_map_names
+set compile_clock_gating_through_hierarchy true

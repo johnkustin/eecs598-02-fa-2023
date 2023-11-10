@@ -13,7 +13,7 @@
 #
 
 VCS = SW_VCS=2020.12-SP2-1 vcs -sverilog +vc -Mupdate -line -full64 +define+
-LIB = /afs/umich.edu/class/eecs598-002/SAED32/SAED32_EDK/lib/stdcell_rvt/verilog/saed32nm.v 
+LIB = /afs/umich.edu/class/eecs598-002/SAED32/SAED32_EDK/lib/stdcell_rvt/verilog/saed32nm.v /afs/umich.edu/class/eecs598-002/SAED32/SAED32_EDK/lib/stdcell_hvt/verilog/saed32nm_hvt.v
 
 all:	simv
 	./simv | tee program.out
@@ -22,10 +22,12 @@ all:	simv
 # Modify starting here
 #####
 
-TESTBENCH = test_mod2_sine.sv
+TESTBENCH = test_mod2_sine.sv 
+#test_mod2_noise.sv
 SIMFILES = ../src/mod2.v ./H_cic_dec_64_N3R0_signed.v
 SYNFILES = ../results/mod2.mapped.v ./H_cic_dec_64_N3R0_signed.v
 
+SYN_SIM_OPTS = +compsdf +neg_tchk 
 
 #####
 # Should be no need to modify after here
@@ -42,7 +44,7 @@ mod2.vg: $(SIMFILES) ../scripts/synth.tcl
 	dc_shell-t -f synth.tcl | tee synth.out
 
 syn_simv:	$(SYNFILES) $(TESTBENCH)
-	$(VCS) +compsdf $(TESTBENCH) $(SYNFILES) $(LIB) -o syn_simv | tee syn_simv.log
+	$(VCS) $(SYN_SIM_OPTS) $(TESTBENCH) $(SYNFILES) $(LIB) -o syn_simv | tee syn_simv.log
 
 syn:	syn_simv
 	./syn_simv | tee syn_program.out | tee syn.log

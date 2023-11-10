@@ -1,21 +1,22 @@
-`timescale 1ns/1fs
+`timescale 1ns/1ps
+`define CLK_HALFPERIOD_ns_1411200HZ 354.308
+
 
 module test_mod2_sine;
 
 // string dataPath = "./";
-string fileName = "sine_n19r15_fin_1k_0p5VFS_OSR_64_fs_44p1k.txt";
+string fileName = "sine_n19r15_fin_1k_0p5VFS_OSR_32_fs_44p1k_96000_pts.txt";
 
 
 parameter IN_W = 19;
 parameter OUT_W = 3;
-// CHANGE OS_DATALEN_RAND TO OS_DATALEN_SIN ON LINE 20 & 78 IF YOU WANT SINEWAVE DATA
-parameter OS_DATALEN_SIN = 192000; // oversampled data length    
+parameter OS_DATALEN = 96000; // oversampled data length    
 
 
-parameter OSR = 64; // for use in decimation filter
+parameter OSR = 32; // for use in decimation filter
 
 reg clk, rstn, en;
-reg [IN_W - 1 : 0] inArr[OS_DATALEN_SIN - 1 : 0]; 
+reg [IN_W - 1 : 0] inArr[OS_DATALEN - 1 : 0]; 
 wire signed [OUT_W-1:0] out;
 wire signed [IN_W-1:0] out_scaled;
 wire signed [50:0] cic_out;
@@ -29,6 +30,7 @@ initial begin
     $dumpfile("test_mod2_sine.vcd");
     $dumpvars(0);
     $readmemh(fileName, inArr);     
+    $sdf_annotate("../results/mod2.mapped.sdf", mod);
 end
 
 mod2 #(
@@ -55,13 +57,11 @@ H_cic_dec_64_N3R0_signed cic( // i need to change this to match the 64 tap fir f
 );
 
 always begin
-    #81.380208 clk <= 1'b1; // full period for 6.144MHz is approx 162.760417ns
-    #81.380208 clk <= 1'b0;
+    #(`CLK_HALFPERIOD_ns_1411200HZ) clk <= 1'b1; 
+    #(`CLK_HALFPERIOD_ns_1411200HZ) clk <= 1'b0;
 end
 
 initial begin
-    // f = $fopen("outputs/test_dsm2_WAVEFRONT_DSM_2nd_DT_QuantizedHexStimulus_Ampl_FS_32767_OSR_64_FS_6144000_NFFT_1048576_FIN_5935.546875.txt", "w");
-    // $fwrite(f,"\t u\t\t y\t e\t k1\t k2\t e_delay_1\t e_delay_2\t v\n");    
     
     f = $fopen({"test_mod2_",fileName}, "w");
     clk <= 0; rstn <= 1; en <= 0;
@@ -71,17 +71,18 @@ initial begin
     @(posedge clk) begin
         en <= 1;
         rstn <= 1;
+        $fmonitor(f, "%d %d %d", in, out, cic_out);
     end
-    // $fmonitor(f, "%d %d %d %d %d %d %d %d", mod.u, mod.y, mod.e, mod.k1, mod.k2, mod.e_delay_1, mod.e_delay_2, mod.v);
-    $fmonitor(f, "%d %d %d", in, out, cic_out);
-    for(i = 0; i < OS_DATALEN_SIN - 1; i = i + 1) begin
-        @(posedge clk) in <= inArr[i];
+    
+    
+    for(i = 0; i < OS_DATALEN - 1; i = i + 1) begin
+        @(negedge clk) in <= inArr[i];
     end
-    in <= 0;
+    @(negedge clk) in <= 0;
 
-    repeat (10) @(posedge clk);
+    
     $display("done");
-    // $fclose(f); 
+    $fclose(f); 
     $finish;
 end
 

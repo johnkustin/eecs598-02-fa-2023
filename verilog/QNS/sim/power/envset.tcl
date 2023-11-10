@@ -12,7 +12,7 @@ set search_path [list \
 
 ## Add libraries below
 ## technology .db file, and memory .db files
-set target_library "${PDK_PATH}/lib/stdcell_rvt/db_ccs/saed32rvt_tt1p05v25c.db"
+set target_library "${PDK_PATH}/lib/stdcell_hvt/db_ccs/saed32hvt_tt0p78v25c.db"
 
 set LINK_PATH [concat  "*" $target_library]
 
