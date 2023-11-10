@@ -1,0 +1,25 @@
+****************************************
+Report : hierarchy
+Design : mod2
+Version: T-2022.03-SP3
+Date   : Thu Nov  9 19:54:31 2023
+****************************************
+
+    AND4X1_HVT                      saed32hvt_tt0p78v25c
+    AO21X1_HVT                      saed32hvt_tt0p78v25c
+    AO222X1_HVT                     saed32hvt_tt0p78v25c
+    AO22X1_HVT                      saed32hvt_tt0p78v25c
+    AOI21X1_HVT                     saed32hvt_tt0p78v25c
+    DFFARX1_HVT                     saed32hvt_tt0p78v25c
+    FADDX1_HVT                      saed32hvt_tt0p78v25c
+    IBUFFX2_HVT                     saed32hvt_tt0p78v25c
+    INVX0_HVT                       saed32hvt_tt0p78v25c
+    INVX1_HVT                       saed32hvt_tt0p78v25c
+    NAND2X0_HVT                     saed32hvt_tt0p78v25c
+    NAND3X0_HVT                     saed32hvt_tt0p78v25c
+    NAND4X0_HVT                     saed32hvt_tt0p78v25c
+    NBUFFX2_HVT                     saed32hvt_tt0p78v25c
+    NOR2X0_HVT                      saed32hvt_tt0p78v25c
+    OA21X1_HVT                      saed32hvt_tt0p78v25c
+    OA221X1_HVT                     saed32hvt_tt0p78v25c
+1

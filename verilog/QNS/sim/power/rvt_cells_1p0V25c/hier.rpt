@@ -1,0 +1,25 @@
+****************************************
+Report : hierarchy
+Design : mod2
+Version: T-2022.03-SP3
+Date   : Thu Nov  9 01:05:26 2023
+****************************************
+
+    AND4X1_RVT                      saed32rvt_tt1p05v25c
+    AO222X1_RVT                     saed32rvt_tt1p05v25c
+    AOI21X1_RVT                     saed32rvt_tt1p05v25c
+    DFFARX1_RVT                     saed32rvt_tt1p05v25c
+    FADDX1_RVT                      saed32rvt_tt1p05v25c
+    HADDX1_RVT                      saed32rvt_tt1p05v25c
+    INVX0_RVT                       saed32rvt_tt1p05v25c
+    INVX1_RVT                       saed32rvt_tt1p05v25c
+    LATCHX1_RVT                     saed32rvt_tt1p05v25c
+    NAND2X0_RVT                     saed32rvt_tt1p05v25c
+    NAND4X0_RVT                     saed32rvt_tt1p05v25c
+    NBUFFX2_RVT                     saed32rvt_tt1p05v25c
+    NOR2X0_RVT                      saed32rvt_tt1p05v25c
+    NOR4X1_RVT                      saed32rvt_tt1p05v25c
+    OA21X1_RVT                      saed32rvt_tt1p05v25c
+    OR2X1_RVT                       saed32rvt_tt1p05v25c
+    OR3X2_RVT                       saed32rvt_tt1p05v25c
+1

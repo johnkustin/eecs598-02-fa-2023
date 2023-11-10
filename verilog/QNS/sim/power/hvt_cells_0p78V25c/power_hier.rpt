@@ -1,0 +1,38 @@
+****************************************
+Report : Time Based Power
+	-hierarchy
+	-verbose
+	-nosplit
+Design : mod2
+Version: T-2022.03-SP3
+Date   : Thu Nov  9 19:54:31 2023
+****************************************
+
+Sampling Interval: 0.001 ns
+
+Library(s) Used:
+
+    saed32hvt_tt0p78v25c (File: /afs/umich.edu/class/eecs598-002/SAED32/SAED32_EDK/lib/stdcell_hvt/db_ccs/saed32hvt_tt0p78v25c.db)
+
+
+Operating Conditions: tt0p78v25c   Library: saed32hvt_tt0p78v25c
+Wire Load Model Mode: enclosed
+
+Cell               Design       Wire_model  Library       Selection_type
+--------------------------------------------------------------------------------
+                   mod2         8000        saed32hvt_tt0p78v25c automatic-by-area
+
+Power-specific unit information :
+    Voltage Units = 1 V
+    Capacitance Units = 0.001 pf
+    Time Units = 1 ns
+    Dynamic Power Units = 1 W
+    Leakage Power Units = 1 W
+
+
+
+                                      Int      Switch   Leak     Peak     Peak            Glitch   X-tran   Total
+Hierarchy                             Power    Power    Power    Power    Time            Power    Power    Power    %
+-----------------------------------------------------------------------------------------------------------------------------
+mod2                                  2.25e-07 7.38e-08 2.59e-05 3.51e-03 7505306.689-7505306.690    0.000    0.000 2.62e-05 100.0
+1

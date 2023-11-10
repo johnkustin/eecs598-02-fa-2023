@@ -1,0 +1,17 @@
+****************************************
+Report : units
+Design : mod2
+Version: T-2022.03-SP3
+Date   : Thu Nov  9 19:54:31 2023
+****************************************
+
+Units
+---------------------------------------------
+Capacitive_load_unit        : 1e-15 Farad
+Current_unit                : 1e-06 Amp
+Resistance_unit             : 1e+06 Ohm
+Time_unit                   : 1e-09 Second
+Voltage_unit                : 1 Volt
+Internal_power_unit         : 1e-06 Watt
+Leakage_power_unit          : 1e-12 Watt
+1
