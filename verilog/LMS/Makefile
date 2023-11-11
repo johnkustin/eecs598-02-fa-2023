@@ -27,7 +27,7 @@ all:	simv
 #####
 
 TESTBENCH = test/testbench.sv
-SIMFILES = src/LMS.sv
+SIMFILES = src/LMS.sv memory/verilog/SRAM_128_12.v
 SYNFILES = LMS.vg
 
 
@@ -51,6 +51,9 @@ syn_simv:	$(SYNFILES) $(TESTBENCH)
 syn:	syn_simv
 	./syn_simv | tee syn_program.out | tee syn.log
 
+memgen:
+	cd memory; ./memgen.sh
+
 syn_NEW:
 		-mkdir -p logs
 		dc_shell -f scripts/synth.tcl | tee logs/synth.log
@@ -69,4 +72,5 @@ clean:
         inter.fsdb novas* verdiLog	
 
 nuke:	clean
-	rm -rvf verdi_config_file *.vg *.rep *.db *.chk *.log *.out *.ddc *.svf .inter.fsdb.tbsim DVEfiles/ export/ logs/ reports/ results/ temp_files/ LMS_dclib/
+	rm -rvf verdi_config_file *.vg *.rep *.db *.chk *.log *.out *.ddc *.svf .inter.fsdb.tbsim DVEfiles/ export/ logs/ reports/ results/ temp_files/ LMS_dclib/ alib-52/ memory/db/ \
+	memory/results/ memory/verilog/ memory/*.log memory/mc_work/*

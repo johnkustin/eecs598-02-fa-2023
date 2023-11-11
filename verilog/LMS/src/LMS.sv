@@ -1,245 +1,162 @@
-module LMS # (parameter N = 32, IN_W = 20, OUT_W = 20, MU_W = 8, ADJ_LUT_IN_W = 10, ADJ_LUT_OUT_W = 12, R_IN = 18, R_OUT = 18, R_MU = 9,  R_ADJ_LUT_IN = 10, R_ADJ_LUT_OUT = 0, MU = 102, OFFSET = 2621, ADD_STEP = 4)
+
+module LMS # (parameter N = 32, EH_IN_W = 32, U1_IN_W = 32, OUT_W = 32, A_IN_W = 8, R_A_IN = 4, A_OUT_W = 13, R_A_OUT = 5, R_EH_IN = 32, R_U1_IN = 31, R_OUT = 31, MU = 102, OFFSET = 2621)
 (
     input                                   clock,
     input                                   reset,
     input logic                             valid_u_in,
-    input logic signed [IN_W-1:0]           data_u_in,
+    input logic signed [U1_IN_W-1:0]        data_u_in,
     input logic                             valid_e_in,
-    input logic signed [IN_W-1:0]           data_e_in,
-    output logic signed [N-1:0] [OUT_W-1:0] data_out,
+    input logic signed [EH_IN_W-1:0]        data_e_in,
+    input logic                             write_lut_in,
+    input logic [A_OUT_W-2:0]               write_lut_data,
+    output logic signed [OUT_W-1:0]         data_out [N-1:0],
     output logic                            valid_out
 );
-    // NOTE: OFFSET and must be provided on R_IN
-    // NOTE: R_MU >= 0 (this should always be true)
-    // NOTE: R_OUT >= 0
+    // NOTE: R_U1_IN > R_A_IN;
 
-    localparam ADJ_LUT_IN_SHIFT_VAL     = (R_IN - R_ADJ_LUT_IN);
-    localparam OUT_SHIFT_VAL            = R_IN + (R_IN - R_OUT); // Go from R_IN to R_OUT
-
-    localparam PROD_W                   = IN_W*2;
-    localparam R_PROD                   = R_IN;
-
-    localparam ADJ_LUT_IN_INTERNAL_W    = (ADJ_LUT_IN_SHIFT_VAL >= 0) ? PROD_W + 2 : (IN_W+ADJ_LUT_IN_W)+2;
-    localparam R_ADJ_LUT_IN_INTERNAL    = R_IN;
-
-    localparam NUM_W                    = IN_W + MU_W;
-    localparam R_NUM                    = R_IN;
-
-    localparam FINAL_ADJ_W              = IN_W + ADJ_LUT_OUT_W;
-    localparam R_FINAL_ADJ              = R_IN;
-
-    localparam INTER_PROD_W             = IN_W*2;
-    localparam R_INTER_PROD_W           = R_IN;
-
-    localparam ADJ_LUT_ENTRIES          = 2**(ADJ_LUT_IN_W-1);
+    localparam DIV_SHIFT    = (R_EH_IN + R_A_OUT) - R_U1_IN; 
+    localparam OUT_SHIFT    = R_U1_IN + (R_U1_IN - R_OUT);
+    localparam A_IN_SHIFT   = (R_U1_IN - R_A_IN); 
 
     localparam OUT_MAX                  = 2**(OUT_W-1)-1;
     localparam OUT_MIN                  = -2**(OUT_W-1);
-    localparam ADJ_IN_MAX               = 2**(ADJ_LUT_IN_W-1)-1;
 
-    typedef enum {IDLE, BOUNDS, LUT, DIV, ADJ, OUTPUT, SETUP} state_t;
-    
+
+    typedef enum {IDLE, LUT, DIV, OUT} state_t;
+
     typedef struct {
         logic valid;
-        logic signed [IN_W-1:0] data;
-    } in_t;
+        logic signed [EH_IN_W-1:0] data;
+    } eh_t;
+
+    typedef struct {
+        logic valid;
+        logic signed [U1_IN_W-1:0] data;
+    } u1_t;
+
+    eh_t e_in_r;
+    eh_t e_in_n;
+
+    u1_t u_in_r;
+    u1_t u_in_n;
 
     state_t state_r;
     state_t state_n;
 
-    in_t u_r;
-    in_t u_n;
+    logic signed [U1_IN_W-1:0] shift_reg_n [N-1:0];
+    logic signed [U1_IN_W-1:0] shift_reg_r [N-1:0];
 
-    in_t e_r;
-    in_t e_n;
+    logic signed [U1_IN_W*2 + 1:0] denom;
 
-    logic signed [ADJ_LUT_IN_INTERNAL_W-1:0]    adj_lut_in_n;
-    logic signed [ADJ_LUT_IN_INTERNAL_W-1:0]    adj_lut_in_r;
+    logic signed [U1_IN_W*2 + 1:0] numer;
 
-    logic signed [ADJ_LUT_OUT_W-1:0]            adj_lut_out_n;
-    logic signed [ADJ_LUT_OUT_W-1:0]            adj_lut_out_r;
+    logic signed [U1_IN_W*2 + 1:0] adj;
 
-    logic signed [NUM_W-1:0]                    num_n;
-    logic signed [NUM_W-1:0]                    num_r;
+    logic signed [(U1_IN_W*2 + 1)*2:0] inter_res_n [N-1:0];
+    logic signed [OUT_W-1:0] final_res_n [N-1:0];
 
-    logic signed [FINAL_ADJ_W-1:0]              final_adj_n;
-    logic signed [FINAL_ADJ_W-1:0]              final_adj_r;
+    logic valid_out_n;
+
+    logic WEB;
+    logic lut_en;
+    logic [A_OUT_W-2:0]  recip_unsigned;
+    logic signed [A_OUT_W-1:0] recip_signed;;
+    logic [A_IN_W-2:0]          lut_address;
+    logic [A_IN_W-2:0]          write_lut_idx;
 
 
-    logic signed [INTER_PROD_W-1:0]             inter_res_n [N-1:0];
-    logic signed [INTER_PROD_W-1:0]             inter_res_r [N-1:0];
+    // memory module
+    
+    SRAM_128_12 lut0 (  .A(lut_address),
+                        .CE(clock),
+                        .WEB(WEB),
+                        .OEB(1'b0),
+                        .CSB(~lut_en),
+                        .I(write_lut_data),
+                        .O(recip_unsigned)
+                    );
+    
+    assign lut_en       = write_lut_in || (state_r == IDLE && (e_in_r.valid && u_in_r.valid));
+    assign WEB          = ~write_lut_in;
+    assign lut_address  = write_lut_in ? write_lut_idx : denom[A_IN_W-2:0];
+    assign recip_signed = $signed({1'b0, recip_unsigned});
 
-    logic signed [IN_W-1:0]                     shift_reg_n [N-1:0];
-    logic signed [IN_W-1:0]                     shift_reg_r [N-1:0];
-
-    logic signed [N-1:0] [OUT_W-1:0]            final_res_n;
-    logic signed [N-1:0] [OUT_W-1:0]            final_res_r;
-
-    logic signed [PROD_W-1:0]                   prod_n [N-1:0];
-    logic signed [PROD_W-1:0]                   prod_r [N-1:0];
-
-    logic [ADJ_LUT_OUT_W-2:0]                   ADJ_RECIP_LUT [ADJ_LUT_ENTRIES]; // width is '-2' because not signed
-
-    logic final_res_valid_n;
-    logic final_res_valid_r;
-
-    logic [$clog2(N):0] add_idx_n; // so can reach the Value "N"
-    logic [$clog2(N):0] add_idx_r;
-
-    initial
-    begin
-        $readmemh("data/adjRecipLutVals.mem", ADJ_RECIP_LUT);
-    end
-
-    assign data_out     = final_res_r;
-    assign valid_out    = final_res_valid_r;
 
     always_comb
     begin
-        state_n             = state_r;
-        u_n                 = u_r;
-        e_n                 = e_r;
-        adj_lut_in_n        = adj_lut_in_r;
-        adj_lut_out_n       = adj_lut_out_r;
-        final_adj_n         = final_adj_r;
-        num_n               = num_r;
-        inter_res_n         = inter_res_r;
-        shift_reg_n         = shift_reg_r;
-        final_res_n         = final_res_r;
-        prod_n              = prod_r;
-        final_res_valid_n   = 1'b0;
-        add_idx_n           = add_idx_r;
+        state_n = state_r;
+        e_in_n = e_in_r;
+        u_in_n = u_in_r;
+        shift_reg_n = shift_reg_r;
+        valid_out_n = 1'b0;
+
+        denom = '0;
+        adj = '0;
+        numer = '0;
+
+        for (int i = 0; i < N; i = i + 1)
+        begin
+            inter_res_n[i] = '0;
+            final_res_n[i] = '0;
+        end
 
         unique case (state_r)
             IDLE:
             begin
-                if (u_r.valid && e_r.valid)
+                if (e_in_r.valid && u_in_r.valid)
                 begin
-                    state_n         = BOUNDS;
-                    // reset the input registers
-                    u_n.valid       = 1'b0;
-                    u_n.data        = '0;
-                    e_n.valid       = 1'b0;
-                    e_n.data        = '0;
+                    state_n = OUT;
+                    u_in_n.valid = 1'b0;
+                    e_in_n.valid = 1'b0;
 
-                    // add the final incoming value to the adjuster
-                    adj_lut_in_n    = (adj_lut_in_r + ((u_r.data * u_r.data) >>> R_IN)); // R_IN
-                    num_n           = (MU * e_r.data) >>> R_MU; // R_MU
-
-                    // transform adjuster to R_ADJ_LUT_IN
-                    if (ADJ_LUT_IN_SHIFT_VAL >= 0)
-                    begin
-                        adj_lut_in_n = adj_lut_in_n >>> ADJ_LUT_IN_SHIFT_VAL;
-                    end
-                    else
-                    begin
-                        adj_lut_in_n = adj_lut_in_n <<< (-ADJ_LUT_IN_SHIFT_VAL);
-                    end
-
-                    // add the data to the shift register
-                    shift_reg_n[0] = u_r.data;
+                    shift_reg_n[0] = u_in_r.data;
                     for (int i = 1; i < N; i = i + 1)
                     begin
                         shift_reg_n[i] = shift_reg_r[i-1];
                     end
+
+                    denom = OFFSET + ((u_in_r.data * u_in_r.data) >> R_U1_IN);
+                    for (int i = 1; i < N; i = i + 1)
+                    begin
+                        denom = denom + ((shift_reg_r[i] * shift_reg_r[i]) >> R_U1_IN);
+                    end
+                    denom = denom >>> A_IN_SHIFT;
                 end
                 else
-                begin // update input registers if one of the inputs comes in
+                begin
                     if (valid_u_in)
                     begin
-                        u_n.valid   = 1'b1;
-                        u_n.data    = data_u_in;
+                        u_in_n.valid = 1'b1;
+                        u_in_n.data = data_u_in;
                     end
                     if (valid_e_in)
                     begin
-                        e_n.valid   = 1'b1;
-                        e_n.data    = data_e_in;
+                        e_in_n.valid = 1'b1;
+                        e_in_n.data = data_e_in;
                     end
                 end
             end
-            BOUNDS: // Potentially get rid of this state if can fit into previous clock period
+            OUT:
             begin
-                state_n = LUT;
-                if (adj_lut_in_r > ADJ_IN_MAX)
-                begin
-                    adj_lut_in_n = ADJ_IN_MAX;
-                end
-                else
-                begin
-                    adj_lut_in_n = adj_lut_in_r;
-                end
-            end
-            LUT:
-            begin
-                state_n         = DIV;
-                adj_lut_out_n   = ADJ_RECIP_LUT[adj_lut_in_r[ADJ_LUT_IN_W-2:0]];
-            end
-            DIV:
-            begin
-                state_n     = ADJ;
-                final_adj_n = (num_r * adj_lut_out_r);
-                if (R_ADJ_LUT_OUT >= 0)
-                begin
-                    final_adj_n = final_adj_n >>> R_ADJ_LUT_OUT; // R_IN
-                end
-                else
-                begin
-                    final_adj_n = final_adj_n <<< (-R_ADJ_LUT_OUT); // R_IN
-                end
-            end
-            ADJ:
-            begin
-                state_n = OUTPUT;
+                state_n = IDLE;
+                numer = (MU * e_in_r.data) >>> R_EH_IN; // R_EH_IN
+                adj = (numer * recip_signed) >>> DIV_SHIFT;// R_U1_IN
+                valid_out_n = 1'b1;
                 for (int i = 0; i < N; i = i + 1)
                 begin
-                    inter_res_n[i] = (shift_reg_r[i] * final_adj_r) >>> OUT_SHIFT_VAL; // R_IN -> R_OUT
-                    // $display("%d = %d * %d, where num_r = %d, adj_lut_out_r = %d, adj_lut_in_r", inter_res_n[i], shift_reg_r[i], final_adj_r, num_r, adj_lut_out_r, adj_lut_in_r);
-                end
-            end
-            OUTPUT:
-            begin
-                state_n             = SETUP;
-                // find the final output vector, keeping N bounds when necessary
-                final_res_valid_n   = 1'b1;
-                // potentially delete
-                for (int i = 0; i < N; i = i + 1)
-                begin
-                    if (inter_res_r[i] > OUT_W'(OUT_MAX))
+                    inter_res_n[i] = (shift_reg_r[i] * adj) >>> OUT_SHIFT;
+                    if (inter_res_n[i] > OUT_W'(OUT_MAX))
                     begin
-                        final_res_n[i] = OUT_W'(OUT_MAX);
+                        final_res_n[i] = OUT_MAX;
                     end
-                    else if (inter_res_r[i] < OUT_W'(OUT_MIN))
+                    else if (inter_res_n[i] < OUT_W'(OUT_MIN))
                     begin
-                        final_res_n[i] = OUT_W'(OUT_MIN);
+                        final_res_n[i] = OUT_MIN;
                     end
                     else
                     begin
-                        final_res_n[i] = inter_res_r[i];
+                        final_res_n[i] = inter_res_n[i];
                     end
-                end
-
-                // find all the squares and store them in prod
-                for (int i = 0; i < N-1; i = i + 1)
-                begin
-                    prod_n[i] = (shift_reg_r[i] * shift_reg_r[i]) >>> R_IN;
-                end
-                prod_n[N-1] = '0; // avoid double counting
-
-                // initialize values for next state
-                adj_lut_in_n = OFFSET;
-                add_idx_n   = '0;
-            end
-            SETUP:
-            begin
-                // recalculate the next adj_n as much as possible
-                for (int i = 0; i < ADD_STEP; i = i + 1)
-                begin
-                    adj_lut_in_n = adj_lut_in_n + prod_r[add_idx_r + i];
-                end
-                add_idx_n = add_idx_r + ADD_STEP;
-                if (add_idx_r + ADD_STEP == N)
-                begin
-                    state_n = IDLE;
                 end
             end
         endcase
@@ -249,43 +166,30 @@ module LMS # (parameter N = 32, IN_W = 20, OUT_W = 20, MU_W = 8, ADJ_LUT_IN_W = 
     begin
         if (reset)
         begin
-            state_r             <= IDLE;
-            u_r.valid           <= 1'b0;
-            u_r.data            <= '0;
-            e_r.valid           <= 1'b0;
-            e_r.data            <= '0;
-
-            adj_lut_in_r        <= OFFSET;
-            adj_lut_out_r       <= '0;
-            final_adj_r         <= '0;
-            num_r               <= '0;
-            final_res_valid_r   <= 1'b0;
-            add_idx_r           <= '0;
-
+            e_in_r.valid <= '0;
+            u_in_r.valid <= '0;
+            e_in_r.data <= '0;
+            u_in_r.data <= '0;
+            state_r <= IDLE;
+            write_lut_idx <= '0;
             for (int i = 0; i < N; i = i + 1)
             begin
-                shift_reg_r[i]  <= '0;
-                inter_res_r[i]  <= '0;
-                final_res_r[i]  <= '0;
-                prod_r[i]       <= '0;
+                shift_reg_r[i] <= '0;
+                data_out[i] <= '0;
             end
         end
         else
         begin
-            state_r             <= state_n;
-            u_r                 <= u_n;
-            e_r                 <= e_n;
-            adj_lut_in_r        <= adj_lut_in_n;
-            adj_lut_out_r       <= adj_lut_out_n;
-            final_adj_r         <= final_adj_n;
-            num_r               <= num_n;
-            final_res_valid_r   <= final_res_valid_n;
-            add_idx_r           <= add_idx_n;
-            shift_reg_r         <= shift_reg_n;
-            inter_res_r         <= inter_res_n;
-            final_res_r         <= final_res_n;
-            prod_r              <= prod_n;
+            e_in_r <= e_in_n;
+            u_in_r <= u_in_n;
+            state_r <= state_n;
+            shift_reg_r <= shift_reg_n;
+            data_out <= final_res_n;
+            valid_out <= valid_out_n;
+            if (write_lut_in)
+            begin
+                write_lut_idx <= write_lut_idx + 1;
+            end
         end
     end
-
 endmodule

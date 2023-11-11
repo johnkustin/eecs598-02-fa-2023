@@ -1,40 +1,46 @@
 module testbench;
     localparam N        = 32;
     localparam K        = 32;
-    localparam MU       = 102;
-    localparam OFFSET   = 2621;
-    localparam IN_W     = 20;
+    localparam MU       = 858993459;
+    localparam OFFSET   = 21474836;
+    localparam EH_IN_W  = 32;
+    localparam U1_IN_W  = 32;
     localparam OUT_W    = 20;
-    localparam MU_W     = 8;
-    localparam R_IN     = 18;
-    localparam R_OUT    = 18;
-    localparam R_MU     = 9;
-    localparam ADD_STEP = 4;
-    localparam ADJ_LUT_IN_W = 10;
-    localparam ADJ_LUT_OUT_W = 12;
-    localparam R_ADJ_LUT_IN = 10;
-    localparam R_ADJ_LUT_OUT = 0;
+    localparam R_EH_IN  = 32;
+    localparam R_OUT    = 31;
+    localparam R_U1_IN  = 31;
+    localparam R_A_IN   = 4;
+    localparam A_IN_W   = 8;
+    localparam R_A_OUT  = 5;
+    localparam A_OUT_W  = 13;
+    localparam LUT_SIZE = 128;
+
+    localparam OUT_NUM = 2601;
 
 
     logic                       clock;
     logic                       reset;
     logic                       valid_u_in;
-    logic signed [IN_W-1:0]     data_u_in;
+    logic signed [U1_IN_W-1:0]     data_u_in;
     logic                       valid_e_in;
-    logic signed [IN_W-1:0]     data_e_in;
-    logic [N-1:0] [OUT_W-1:0]   data_out; // Weird error with packed signed 2D arrays, easier to cast after-the-fact
+    logic signed [EH_IN_W-1:0]     data_e_in;
+    logic signed [OUT_W-1:0]   data_out [N-1:0]; // Weird error with packed signed 2D arrays, easier to cast after-the-fact
     logic                       valid_out;
+    logic [A_OUT_W-2:0]         write_lut_data;
+    logic                       write_lut_in;
 
-    logic signed [IN_W-1:0]     u_in [N-1:0];
-    logic signed [IN_W-1:0]     e_in [N-1:0];
+    logic signed [U1_IN_W-1:0]     u_in [OUT_NUM-1:0];
+    logic signed [EH_IN_W-1:0]     e_in [OUT_NUM-1:0];
+    logic [A_OUT_W-2:0] recip_vals [LUT_SIZE-1:0];
 
     integer clock_cnt;
     integer data_cnt;
     integer out_file;
     integer out_cnt;
+    integer lut_cnt;
 
-    LMS # (.N(N), .IN_W(IN_W), .OUT_W(OUT_W), .MU_W(MU_W), .ADJ_LUT_IN_W(ADJ_LUT_IN_W), .ADJ_LUT_OUT_W(ADJ_LUT_OUT_W), .R_IN(R_IN), .R_OUT(R_OUT), .R_MU(R_MU), 
-            .R_ADJ_LUT_IN(R_ADJ_LUT_IN), .R_ADJ_LUT_OUT(R_ADJ_LUT_OUT), .MU(MU), .OFFSET(OFFSET), .ADD_STEP(ADD_STEP)) lms0
+    LMS # (.N(N), .EH_IN_W(EH_IN_W), .U1_IN_W(U1_IN_W), .OUT_W(OUT_W), .A_IN_W(A_IN_W), .R_A_IN(R_A_IN), .R_A_OUT(R_A_OUT), .A_OUT_W(A_OUT_W), .R_EH_IN(R_EH_IN), .R_U1_IN(R_U1_IN), .R_OUT(R_OUT), 
+           .MU(MU), .OFFSET(OFFSET)) lms0
     (
         .clock      (clock),
         .reset      (reset),
@@ -42,6 +48,8 @@ module testbench;
         .data_u_in  (data_u_in),
         .valid_e_in (valid_e_in),
         .data_e_in  (data_e_in),
+        .write_lut_in(write_lut_in),
+        .write_lut_data(write_lut_data),
         .data_out   (data_out),
         .valid_out  (valid_out)
     );
@@ -56,6 +64,7 @@ module testbench;
     begin
         $readmemh("data/uVals.mem", u_in);
         $readmemh("data/eVals.mem", e_in);
+        $readmemh("data/adjRecipLutVals.mem", recip_vals);
     end
 
     always @(negedge clock)
@@ -68,35 +77,46 @@ module testbench;
             valid_u_in  <= 1'b0;
             data_e_in   <= '0;
             data_u_in   <= '0;
+            lut_cnt     <= '0;
         end
         else
         begin
-            clock_cnt <= clock_cnt + 1;
-            if (data_cnt == N)
+            if (lut_cnt < LUT_SIZE)
             begin
-                valid_e_in  <= 1'b0;
-                valid_u_in  <= 1'b0;
-                data_u_in   <= '0;
-                data_e_in   <= '0;
+                lut_cnt <= lut_cnt + 1;
+                write_lut_in <= 1'b1;
+                write_lut_data <= recip_vals[lut_cnt];
             end
             else
             begin
-                if (clock_cnt % K == 0)
-                begin
-                    data_cnt    <= data_cnt + 1;
-                    valid_e_in  <= 1'b1;
-                    data_e_in   <= e_in[data_cnt];
-
-                    valid_u_in  <= 1'b1;
-                    data_u_in   <= u_in[data_cnt];
-                end
-                else
+                write_lut_in <= 1'b0;
+                clock_cnt <= clock_cnt + 1;
+                if (data_cnt == OUT_NUM)
                 begin
                     valid_e_in  <= 1'b0;
                     valid_u_in  <= 1'b0;
-                    
-                    data_e_in   <= '0;
                     data_u_in   <= '0;
+                    data_e_in   <= '0;
+                end
+                else
+                begin
+                    if (clock_cnt % K == 0)
+                    begin
+                        data_cnt    <= data_cnt + 1;
+                        valid_e_in  <= 1'b1;
+                        data_e_in   <= e_in[data_cnt];
+
+                        valid_u_in  <= 1'b1;
+                        data_u_in   <= u_in[data_cnt];
+                    end
+                    else
+                    begin
+                        valid_e_in  <= 1'b0;
+                        valid_u_in  <= 1'b0;
+                        
+                        data_e_in   <= '0;
+                        data_u_in   <= '0;
+                    end
                 end
             end
         end
@@ -113,13 +133,13 @@ module testbench;
             if (valid_out)
             begin
                 out_cnt <= out_cnt + 1;
-                $fdisplay(out_file, "\n\nITER NUM %d", out_cnt);
+                $display("%d", out_cnt);
                 for (int i = 0; i < N; i = i + 1)
                 begin
-                    $fdisplay(out_file, "%d", $signed(data_out[i]));
+                    $fdisplay(out_file, "%d", data_out[i]);
                 end
             end
-            if (out_cnt == N)
+            if (out_cnt == OUT_NUM)
             begin
                 $fclose(out_file);
                 $finish;
