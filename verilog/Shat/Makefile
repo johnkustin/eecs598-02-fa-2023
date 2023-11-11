@@ -13,7 +13,7 @@
 #
 export MK_COURSE_NAME = EECS598-002
 export MK_DESIGN_NAME = Shat
-export MK_USE_NUM_CORES = 4
+export MK_USE_NUM_CORES = 6
 export MK_MEM_SUFFIX = typ_1d05_25
 
 VCS = SW_VCS=2020.12-SP2-1 vcs -sverilog +vc -Mupdate -line -full64 +define+
