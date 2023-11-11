@@ -21,23 +21,26 @@ module testbench;
     logic                       clock;
     logic                       reset;
     logic                       valid_u_in;
-    logic signed [U1_IN_W-1:0]     data_u_in;
+    logic signed [U1_IN_W-1:0]  data_u_in;
     logic                       valid_e_in;
-    logic signed [EH_IN_W-1:0]     data_e_in;
-    logic signed [OUT_W-1:0]   data_out [N-1:0]; // Weird error with packed signed 2D arrays, easier to cast after-the-fact
+    logic signed [EH_IN_W-1:0]  data_e_in;
+    logic signed [OUT_W-1:0]    data_out [N-1:0]; // Weird error with packed signed 2D arrays, easier to cast after-the-fact
     logic                       valid_out;
     logic [A_OUT_W-2:0]         write_lut_data;
+    logic [A_IN_W-2:0]          write_lut_idx;
     logic                       write_lut_in;
 
-    logic signed [U1_IN_W-1:0]     u_in [OUT_NUM-1:0];
-    logic signed [EH_IN_W-1:0]     e_in [OUT_NUM-1:0];
-    logic [A_OUT_W-2:0] recip_vals [LUT_SIZE-1:0];
+    logic signed [U1_IN_W-1:0]  u_in [OUT_NUM-1:0];
+    logic signed [EH_IN_W-1:0]  e_in [OUT_NUM-1:0];
+    logic [A_OUT_W-2:0]         recip_vals [LUT_SIZE-1:0];
 
     integer clock_cnt;
     integer data_cnt;
     integer out_file;
     integer out_cnt;
     integer lut_cnt;
+
+    logic is_first;
 
     LMS # (.N(N), .EH_IN_W(EH_IN_W), .U1_IN_W(U1_IN_W), .OUT_W(OUT_W), .A_IN_W(A_IN_W), .R_A_IN(R_A_IN), .R_A_OUT(R_A_OUT), .A_OUT_W(A_OUT_W), .R_EH_IN(R_EH_IN), .R_U1_IN(R_U1_IN), .R_OUT(R_OUT), 
            .MU(MU), .OFFSET(OFFSET)) lms0
@@ -50,6 +53,7 @@ module testbench;
         .data_e_in  (data_e_in),
         .write_lut_in(write_lut_in),
         .write_lut_data(write_lut_data),
+        .write_lut_idx(write_lut_idx),
         .data_out   (data_out),
         .valid_out  (valid_out)
     );
@@ -71,18 +75,29 @@ module testbench;
     begin
         if (reset)
         begin
-            clock_cnt   <= 0;
-            data_cnt    <= 0;
-            valid_e_in  <= 1'b0;
-            valid_u_in  <= 1'b0;
-            data_e_in   <= '0;
-            data_u_in   <= '0;
-            lut_cnt     <= '0;
+            clock_cnt       <= 0;
+            data_cnt        <= 0;
+            valid_e_in      <= 1'b0;
+            valid_u_in      <= 1'b0;
+            data_e_in       <= '0;
+            data_u_in       <= '0;
+            lut_cnt         <= '0;
+            write_lut_idx   <= '0;
+            is_first        <= 1'b1;
         end
         else
         begin
             if (lut_cnt < LUT_SIZE)
             begin
+                if (is_first)
+                begin
+                    write_lut_idx <= '0;
+                    is_first      <= 1'b0;
+                end
+                else
+                begin
+                    write_lut_idx <= write_lut_idx + 1;
+                end
                 lut_cnt <= lut_cnt + 1;
                 write_lut_in <= 1'b1;
                 write_lut_data <= recip_vals[lut_cnt];

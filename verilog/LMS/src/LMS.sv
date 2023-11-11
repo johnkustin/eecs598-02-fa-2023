@@ -9,10 +9,12 @@ module LMS # (parameter N = 32, EH_IN_W = 32, U1_IN_W = 32, OUT_W = 32, A_IN_W =
     input logic signed [EH_IN_W-1:0]        data_e_in,
     input logic                             write_lut_in,
     input logic [A_OUT_W-2:0]               write_lut_data,
+    input logic [A_IN_W-2:0]                write_lut_idx,
     output logic signed [OUT_W-1:0]         data_out [N-1:0],
     output logic                            valid_out
 );
     // NOTE: R_U1_IN > R_A_IN;
+    // NOTE: can't have valid_e_in valid for back to back cycles
 
     localparam DIV_SHIFT    = (R_EH_IN + R_A_OUT) - R_U1_IN; 
     localparam OUT_SHIFT    = R_U1_IN + (R_U1_IN - R_OUT);
@@ -55,14 +57,15 @@ module LMS # (parameter N = 32, EH_IN_W = 32, U1_IN_W = 32, OUT_W = 32, A_IN_W =
     logic signed [(U1_IN_W*2 + 1)*2:0] inter_res_n [N-1:0];
     logic signed [OUT_W-1:0] final_res_n [N-1:0];
 
-    logic valid_out_n;
+    logic [1:0] valid_out_shift_n;
+    logic [1:0] valid_out_shift_r;
 
     logic WEB;
     logic lut_en;
     logic [A_OUT_W-2:0]  recip_unsigned;
     logic signed [A_OUT_W-1:0] recip_signed;;
     logic [A_IN_W-2:0]          lut_address;
-    logic [A_IN_W-2:0]          write_lut_idx;
+    
 
 
     // memory module
@@ -76,7 +79,7 @@ module LMS # (parameter N = 32, EH_IN_W = 32, U1_IN_W = 32, OUT_W = 32, A_IN_W =
                         .O(recip_unsigned)
                     );
     
-    assign lut_en       = write_lut_in || (state_r == IDLE && (e_in_r.valid && u_in_r.valid));
+    assign lut_en       = write_lut_in || (e_in_r.valid && u_in_r.valid);
     assign WEB          = ~write_lut_in;
     assign lut_address  = write_lut_in ? write_lut_idx : denom[A_IN_W-2:0];
     assign recip_signed = $signed({1'b0, recip_unsigned});
@@ -84,82 +87,70 @@ module LMS # (parameter N = 32, EH_IN_W = 32, U1_IN_W = 32, OUT_W = 32, A_IN_W =
 
     always_comb
     begin
-        state_n = state_r;
+        numer = (MU * e_in_r.data) >>> R_EH_IN; // R_EH_IN
+        adj = (numer * recip_signed) >>> DIV_SHIFT;// R_U1_IN
+        for (int i = 0; i < N; i = i + 1)
+        begin
+            inter_res_n[i] = (shift_reg_r[i] * adj) >>> OUT_SHIFT;
+            if (inter_res_n[i] > OUT_W'(OUT_MAX))
+            begin
+                final_res_n[i] = OUT_MAX;
+            end
+            else if (inter_res_n[i] < OUT_W'(OUT_MIN))
+            begin
+                final_res_n[i] = OUT_MIN;
+            end
+            else
+            begin
+                final_res_n[i] = inter_res_n[i];
+            end
+        end
+    end
+
+    always_comb
+    begin
+        denom = OFFSET + ((u_in_r.data * u_in_r.data) >> R_U1_IN);
+        for (int i = 1; i < N; i = i + 1)
+        begin
+            denom = denom + ((shift_reg_r[i] * shift_reg_r[i]) >> R_U1_IN);
+        end
+        denom = denom >>> A_IN_SHIFT;
+    end
+
+    always_comb
+    begin
         e_in_n = e_in_r;
         u_in_n = u_in_r;
         shift_reg_n = shift_reg_r;
-        valid_out_n = 1'b0;
+        valid_out_shift_n[1] = valid_out_shift_r[0];
 
-        denom = '0;
-        adj = '0;
-        numer = '0;
-
-        for (int i = 0; i < N; i = i + 1)
+        if (e_in_r.valid && u_in_r.valid)
         begin
-            inter_res_n[i] = '0;
-            final_res_n[i] = '0;
+            u_in_n.valid = 1'b0;
+            e_in_n.valid = 1'b0;
+
+            valid_out_shift_n[0] = 1'b1;
+
+            shift_reg_n[0] = u_in_r.data;
+            for (int i = 1; i < N; i = i + 1)
+            begin
+                shift_reg_n[i] = shift_reg_r[i-1];
+            end
         end
-
-        unique case (state_r)
-            IDLE:
+        else
+        begin
+            valid_out_shift_n[0] = 1'b0;
+            if (valid_u_in)
             begin
-                if (e_in_r.valid && u_in_r.valid)
-                begin
-                    state_n = OUT;
-                    u_in_n.valid = 1'b0;
-                    e_in_n.valid = 1'b0;
-
-                    shift_reg_n[0] = u_in_r.data;
-                    for (int i = 1; i < N; i = i + 1)
-                    begin
-                        shift_reg_n[i] = shift_reg_r[i-1];
-                    end
-
-                    denom = OFFSET + ((u_in_r.data * u_in_r.data) >> R_U1_IN);
-                    for (int i = 1; i < N; i = i + 1)
-                    begin
-                        denom = denom + ((shift_reg_r[i] * shift_reg_r[i]) >> R_U1_IN);
-                    end
-                    denom = denom >>> A_IN_SHIFT;
-                end
-                else
-                begin
-                    if (valid_u_in)
-                    begin
-                        u_in_n.valid = 1'b1;
-                        u_in_n.data = data_u_in;
-                    end
-                    if (valid_e_in)
-                    begin
-                        e_in_n.valid = 1'b1;
-                        e_in_n.data = data_e_in;
-                    end
-                end
+                u_in_n.valid = 1'b1;
+                u_in_n.data = data_u_in;
             end
-            OUT:
+            if (valid_e_in)
             begin
-                state_n = IDLE;
-                numer = (MU * e_in_r.data) >>> R_EH_IN; // R_EH_IN
-                adj = (numer * recip_signed) >>> DIV_SHIFT;// R_U1_IN
-                valid_out_n = 1'b1;
-                for (int i = 0; i < N; i = i + 1)
-                begin
-                    inter_res_n[i] = (shift_reg_r[i] * adj) >>> OUT_SHIFT;
-                    if (inter_res_n[i] > OUT_W'(OUT_MAX))
-                    begin
-                        final_res_n[i] = OUT_MAX;
-                    end
-                    else if (inter_res_n[i] < OUT_W'(OUT_MIN))
-                    begin
-                        final_res_n[i] = OUT_MIN;
-                    end
-                    else
-                    begin
-                        final_res_n[i] = inter_res_n[i];
-                    end
-                end
+                e_in_n.valid = 1'b1;
+                e_in_n.data = data_e_in;
             end
-        endcase
+        end
     end
 
     always @(posedge clock)
@@ -170,8 +161,7 @@ module LMS # (parameter N = 32, EH_IN_W = 32, U1_IN_W = 32, OUT_W = 32, A_IN_W =
             u_in_r.valid <= '0;
             e_in_r.data <= '0;
             u_in_r.data <= '0;
-            state_r <= IDLE;
-            write_lut_idx <= '0;
+            valid_out_shift_r <= '0;
             for (int i = 0; i < N; i = i + 1)
             begin
                 shift_reg_r[i] <= '0;
@@ -180,16 +170,13 @@ module LMS # (parameter N = 32, EH_IN_W = 32, U1_IN_W = 32, OUT_W = 32, A_IN_W =
         end
         else
         begin
+            valid_out_shift_r <= valid_out_shift_n;
             e_in_r <= e_in_n;
             u_in_r <= u_in_n;
             state_r <= state_n;
             shift_reg_r <= shift_reg_n;
             data_out <= final_res_n;
-            valid_out <= valid_out_n;
-            if (write_lut_in)
-            begin
-                write_lut_idx <= write_lut_idx + 1;
-            end
+            valid_out <= valid_out_shift_n[1];
         end
     end
 endmodule
