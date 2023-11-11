@@ -15,14 +15,14 @@ def fixedPointQuantizer(dataPoint, N, R):
     else:
         return toReturn
 
-N = 8
-R = 9
+N = 32
+R = 32
 
 mu = 0.2
 offset = 0.01
 
 mu_fixed = fixedPointQuantizer(mu, N, R)
-offset_fixed = fixedPointQuantizer(offset, 20, 18)
+offset_fixed = fixedPointQuantizer(offset, 32, 31)
 
 print(f"mu = {mu_fixed}")
 print(f"offset = {offset_fixed}")

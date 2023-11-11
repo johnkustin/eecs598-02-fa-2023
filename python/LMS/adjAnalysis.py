@@ -8,10 +8,10 @@ def fixedPointQuantizer(dataPoint, N, R):
     toReturn = round(dataPoint*(math.pow(2, R)))
     
     if (toReturn < minVal):
-        print("clipping low")
+        # print("clipping low")
         return minVal
     elif (toReturn > maxVal):
-        print("clipping high")
+        # print("clipping high")
         return maxVal
     else:
         return toReturn
@@ -33,8 +33,8 @@ def fixedToFloat(data, R):
 # R1 = 5
 
 # however, going to build one from this for now
-N1 = 10
-R1 = 10
+N1 = 8
+R1 = 4
 
 
 originalVals = []
@@ -43,6 +43,8 @@ with open ("data/adjVals.txt", 'r') as file:
         originalVals.append(float(line.strip()))
 
 originalVals.sort()
+print(originalVals[0])
+print(originalVals[len(originalVals)-1])
 
 fixedPointVals = fixedPointDataQuantizer(originalVals, N1, R1)
 
@@ -62,8 +64,8 @@ print(f"MSE of original = {MSE/len(convertedVals)}")
 # N2 = 12
 # R2 = 5
 
-N2 = 12
-R2 = 0
+N2 = 13
+R2 = 5
 
 originalRecip = np.zeros(len(originalVals))
 for val in originalVals:
@@ -103,6 +105,6 @@ for i in range(maxVal):
 print(f"\n for ({N1}, {R1}) to ({N2}, {R2}) LUT")
 print(f"MSE = {MSE/maxVal}")
 
-with open("../../verilog/LMS/adjRecipLutVals.mem",'w') as file:
+with open("../../verilog/LMS/data/adjRecipLutVals.mem",'w') as file:
     for val in lut_vals:
         file.write(hex(int(val))[2:] + '\n')

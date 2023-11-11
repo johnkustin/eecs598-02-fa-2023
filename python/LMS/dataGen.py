@@ -27,28 +27,30 @@ def fixedPointQuantizer(dataPoint, N, R):
         return toReturn
 
 
-N = 20
-R = 18
+N = 32
+R = 31
 
 
 valsToWrite = []
-with open("data/sim_in_u1v.txt", 'r') as file:
+with open("data/u1.txt", 'r') as file:
     for data in file:
         valsToWrite.append(hex(convert2sCompl(fixedPointQuantizer(float(data), N, R), N))[2:])
 
-with open("../../verilog/LMS/uVals.mem", 'w') as file:
+with open("../../verilog/LMS/data/uVals.mem", 'w') as file:
     for cnt, val in enumerate(valsToWrite):
         if (cnt == len(valsToWrite)-1):
             file.write(val)
         else:
             file.write(val + '\n')
 
+N = 32
+R = 32
 valsToWrite = []
-with open("data/sim_in_eh.txt", 'r') as file:
+with open("data/eh.txt", 'r') as file:
     for data in file:
         valsToWrite.append(hex(convert2sCompl(fixedPointQuantizer(float(data), N, R), N))[2:])
 
-with open("../../verilog/LMS/eVals.mem", 'w') as file:
+with open("../../verilog/LMS/data/eVals.mem", 'w') as file:
     for cnt, val in enumerate(valsToWrite):
         if (cnt == len(valsToWrite)-1):
             file.write(val)
