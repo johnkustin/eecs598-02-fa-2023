@@ -12,7 +12,7 @@ set PDK_PATH $::env(SAED32_PATH)
 puts "PDK path at $PDK_PATH"
 
 set DESIGN_NAME $::env(MK_DESIGN_NAME)
-set RTL_SOURCE_FILES  [glob -nocomplain src/*.v	src/*.sv src/*.vh src/*.svh]
+set RTL_SOURCE_FILES  [glob -nocomplain src/*.v	src/*.sv src/*.vh src/*.svh memory/verilog/*.v]
 set NETLIST_FILES ""
 set DESIGN_DEFINES ""
 set DESIGN_PATH          "[pwd]"
@@ -30,10 +30,12 @@ set MEM_SUFFIX $::env(MK_MEM_SUFFIX)
 
 # set MAX_LIBRARY_SET               [glob -nocomplain "${PDK_PATH}/lib/stdcell_rvt/db_ccs/saed32rvt_ss0p95v125c.db"]
 set TYP_LIBRARY_SET               [glob -nocomplain "${PDK_PATH}/lib/stdcell_rvt/db_ccs/saed32rvt_tt1p05v25c.db"]
+set TYP_HVT_LIBRARY_SET           [glob -nocomplain "${PDK_PATH}/lib/stdcell_hvt/db_ccs/saed32rvt_tt1p05v25c.db"]
+set TYP_HVT_LOWV_LIBRARY_SET      [glob -nocomplain "${PDK_PATH}/lib/stdcell_hvt/db_ccs/saed32hvt_tt0p78v25c.db"]
 # set MIN_LIBRARY_SET               [glob -nocomplain "${PDK_PATH}/lib/stdcell_rvt/db_ccs/saed32rvt_ff1p16vn40c.db"]
 
 set corner_case "typ"
-set TARGET_LIBRARY_FILES        ${TYP_LIBRARY_SET}
+set TARGET_LIBRARY_FILES        ${TYP_HVT_LOWV_LIBRARY_SET}
 set ADDITIONAL_LINK_LIB_FILES   "[glob -nocomplain ${DESIGN_PATH}/memory/db/*_${MEM_SUFFIX}_ccs.db]
                                    [glob -nocomplain ${DESIGN_PATH}/blocks/*/export/*.db]"
 

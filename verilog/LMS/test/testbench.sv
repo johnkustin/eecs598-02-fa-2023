@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module testbench;
     localparam N        = 32;
     localparam K        = 32;
@@ -41,6 +43,13 @@ module testbench;
     integer lut_cnt;
 
     logic is_first;
+
+    initial
+    begin
+    	$dumpfile("testbench.vcd");
+        $dumpvars(0);	
+        $sdf_annotate("results/LMS.mapped.sdf", lms0); // this line will cause some warnings when you run the *NON SYNTHESIZED* version of the hardware 
+    end
 
     LMS # (.N(N), .EH_IN_W(EH_IN_W), .U1_IN_W(U1_IN_W), .OUT_W(OUT_W), .A_IN_W(A_IN_W), .R_A_IN(R_A_IN), .R_A_OUT(R_A_OUT), .A_OUT_W(A_OUT_W), .R_EH_IN(R_EH_IN), .R_U1_IN(R_U1_IN), .R_OUT(R_OUT), 
            .MU(MU), .OFFSET(OFFSET)) lms0

@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module testbench;
     localparam N        = 32;
     localparam K        = 32;
@@ -22,6 +24,13 @@ module testbench;
     integer                     out_cnt;
     integer                     out_file;
 
+    initial
+    begin
+    	$dumpfile("testbench.vcd");
+        $dumpvars(0);	
+        $sdf_annotate("results/Shat.mapped.sdf", sh0); // this line will cause some warnings when you run the *NON SYNTHESIZED* version of the hardware 
+    end
+    
     Shat #(.N(N), .IN_W(IN_W), .OUT_W(OUT_W), .SH_W(SH_W), .R_IN(R_IN), .R_OUT(R_OUT), .R_SH(R_SH)) sh0
     (
         .clock      (clock),

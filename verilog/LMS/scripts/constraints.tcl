@@ -13,7 +13,7 @@ set_clock_transition $clock_transition [get_clocks core_clk]
 set_clock_latency $clock_latency [get_clocks core_clk]
 
 set_load 0.3 [all_outputs]
-set_driving_cell -no_design_rule -lib_cell NBUFFX4_RVT [all_inputs]
+set_driving_cell -no_design_rule -lib_cell NBUFFX4_HVT [all_inputs]
 
 set_input_delay -max [expr $clock_period * 0.2] [get_ports -filter "direction == in" valid_u_in*] -clock core_clk
 set_input_delay -min [expr $clock_period * 0.1] [get_ports -filter "direction == in" valid_u_in*] -clock core_clk

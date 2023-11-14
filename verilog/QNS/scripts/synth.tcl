@@ -30,7 +30,7 @@ set MEM_SUFFIX $::env(MK_MEM_SUFFIX)
 
 # set MAX_LIBRARY_SET               [glob -nocomplain "${PDK_PATH}/lib/stdcell_rvt/db_ccs/saed32rvt_ss0p95v125c.db"]
 set TYP_LIBRARY_SET                 [glob -nocomplain "${PDK_PATH}/lib/stdcell_rvt/db_ccs/saed32rvt_tt1p05v25c.db"]
-set TYP_HVT_LIBRARY_SET	            [glob -nocomplain "${PDK_PATH}/lib/stdcell_hvt/db_ccs/saed32rvt_tt1p05v25c.db"] 
+set TYP_HVT_LIBRARY_SET	            [glob -nocomplain "${PDK_PATH}/lib/stdcell_hvt/db_ccs/saed32hvt_tt1p05v25c.db"] 
 set TYP_HVT_LOWV_LIBRARY_SET        [glob -nocomplain "${PDK_PATH}/lib/stdcell_hvt/db_ccs/saed32hvt_tt0p78v25c.db"]
 # set MIN_LIBRARY_SET               [glob -nocomplain "${PDK_PATH}/lib/stdcell_rvt/db_ccs/saed32rvt_ff1p16vn40c.db"]
 
