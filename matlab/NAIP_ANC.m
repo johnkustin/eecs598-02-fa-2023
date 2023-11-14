@@ -38,7 +38,10 @@ sh = K*sh(1+(N_AAF-1)/2:K:end);
 sh = sh(1:NS)';
 
 % simulation signals
-up = randn(K*L,1); % up=conv(up, ones(4,1)/4); up=up(1:end-3);
+fsin = 100;
+t = 0:1/(fs*K):L/fs - 1/fs/K;
+xstep = [ones(L*K/2,1);-ones(L*K/2,1)];
+up = xstep;%randn(K*L,1);%4.5817/4 * sin(2*pi*fsin.*t') + randn(K*L,1);%4.5817*ones(K*L,1);%randn(K*L,1); % up=conv(up, ones(4,1)/4); up=up(1:end-3);
 yp = zeros(K*L,1);
 dp = zeros(K*L,1);
 ep = zeros(K*L,1);
@@ -65,7 +68,6 @@ w = zeros(NW,1);
 
 NW0 = NW*K-K/2;
 w0 = zeros(NW0,1);
-
 NQNS = 4;
 QNSx = cell(NQNS,1);
 Levels = [2 1/K 4 10];
@@ -101,12 +103,12 @@ for n0=Li*K:L*K
         d(n) = AAF*dp(n0:-1:n0-length(AAF)+1); % just for debug
         
         u1(n) = sh'*u(n:-1:n-NS+1);
+        u1v = u1(n:-1:n-NW+1);
 
         y(n) = w'*u(n:-1:n-NW+1);
         dh(n) = e(n) + sh'*y(n:-1:n-NS+1);
-        eh(n) = dh(n) - w'*u1(n:-1:n-NW+1);
+        eh(n) = dh(n) - w'*u1v;
 
-        u1v = u1(n:-1:n-NW+1);
         w = w + mu*eh(n)*u1v/(u1v'*u1v+1e-2);
     end
     
@@ -135,7 +137,7 @@ end
 
 fprintf(1,'QNS: u w y e\n');
 for i=1:NQNS
-    m = sqrt(max(conv(xqns(:,i).^2,ones(10,1))/10));
+    m = sqrt(max(conv(xqns(:,i).^2,ones(K,1))/K));
     fprintf(1, 'QNS(%d) -- max input signal RMS: %f\n', i, m);
     
     x = conv(AAF,xqns(:,i)); x=x(length(AAF):end);

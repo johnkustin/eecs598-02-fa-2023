@@ -4,6 +4,8 @@ function [mantissa, fp_info] = fp_dot(fp_in1, fp_in2, N1, R1, N2, R2, N3, R3)
 
 
 mantissa = fp_in1' * fp_in2; % (N1+N2,R1+R2)
+% dot product is sum of products. after products, all terms have precision
+% (R1+R2). there is no need to adjust the precision at this stage
 
 fp_info.max_n3_mantissa = 2^(N3-1)-1; % do saturation in case
 fp_info.min_n3_mantissa = -2^(N3-1);

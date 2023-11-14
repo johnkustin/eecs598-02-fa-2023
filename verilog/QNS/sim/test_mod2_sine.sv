@@ -71,12 +71,13 @@ initial begin
     @(posedge clk) begin
         en <= 1;
         rstn <= 1;
-        $fmonitor(f, "%d %d %d", in, out, cic_out);
+        // $fmonitor(f, "%d %d %d", in, out, cic_out);
     end
     
     
     for(i = 0; i < OS_DATALEN - 1; i = i + 1) begin
         @(negedge clk) in <= inArr[i];
+        @(posedge clk) $fwrite(f, "%d %d %d\n", in, out, cic_out);
     end
     @(negedge clk) in <= 0;
 
