@@ -157,7 +157,6 @@ module testbench;
             if (valid_out)
             begin
                 out_cnt <= out_cnt + 1;
-                $display("%d", out_cnt);
                 for (int i = 0; i < N; i = i + 1)
                 begin
                     $fdisplay(out_file, "%d", data_out[i]);

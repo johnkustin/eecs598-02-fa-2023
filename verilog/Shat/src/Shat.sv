@@ -32,24 +32,29 @@ module Shat # (parameter N = 32, IN_W = 32, OUT_W = 32, SH_W = 32, R_IN = 31, R_
     always_comb
     begin
         shift_reg_n = shift_reg_r;
+        sum_n = '0;
+        final_sum_n = '0;
         // OUTPUT
-        sum_n       = ((data_in * sh[0]) >>> SHIFT_VAL);
-        for (int i = 0; i < N-1; i = i + 1)
+        if (valid_in)
         begin
-            sum_n = sum_n + ((shift_reg_r[i] * sh[i+1]) >>> SHIFT_VAL);
-        end
+            sum_n       = ((data_in * sh[0]) >>> SHIFT_VAL);
+            for (int i = 0; i < N-1; i = i + 1)
+            begin
+                sum_n = sum_n + ((shift_reg_r[i] * sh[i+1]) >>> SHIFT_VAL);
+            end
 
-        if (sum_n > OUT_W'(OUT_MAX))
-        begin
-            final_sum_n = OUT_W'(OUT_MAX);
-        end
-        else if (sum_n < OUT_W'(OUT_MIN))
-        begin
-            final_sum_n = OUT_W'(OUT_MIN);
-        end
-        else
-        begin
-            final_sum_n = sum_n;
+            if (sum_n > OUT_W'(OUT_MAX))
+            begin
+                final_sum_n = OUT_W'(OUT_MAX);
+            end
+            else if (sum_n < OUT_W'(OUT_MIN))
+            begin
+                final_sum_n = OUT_W'(OUT_MIN);
+            end
+            else
+            begin
+                final_sum_n = sum_n;
+            end
         end
 
         if (valid_in)
