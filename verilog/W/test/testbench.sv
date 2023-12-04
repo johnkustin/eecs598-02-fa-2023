@@ -3,7 +3,7 @@
 module testbench;
     localparam N        = 32;
     localparam K        = 32;
-    localparam INPUT_N  = 3000;
+    localparam INPUT_N  = 2097152;
     localparam IN_W     = 32;
     localparam OUT_W    = 32;
     localparam COEFF_W  = 32;
@@ -54,7 +54,7 @@ module testbench;
 
     initial
     begin
-        $readmemh("data/inputVals.mem", input_data);
+        $readmemh("data/xnoise.txt", input_data);
     end
 
     always @(negedge clock)
@@ -118,7 +118,7 @@ module testbench;
         if (valid_out)
         begin
             out_cnt <= out_cnt + 1;
-            $fdisplay(out_file, "%d", data_out);
+            $fdisplay(out_file, "%h", data_out);
         end
         if (out_cnt == 2*INPUT_N)
         begin
@@ -136,14 +136,16 @@ module testbench;
         @(negedge clock);
         reset = 0;
         weight_en <= '1;
-        sh = {32'hffec56d6, 32'hff645a1d, 32'h226809d, 32'hef295e9e,
-            32'he52a3055, 32'hbb439581, 32'hfeb851ec, 32'h351eb852,
-            32'hd35a86, 32'h10b0f28, 32'hff089a02, 32'hbac711, 
-            32'hff80346e, 32'h4816f0, 32'hffe76c8b, 32'hfff14120,
-            32'h2f837b, 32'hffb7e910, 32'h5a1cac, 32'hff98c7e3,
-            32'h6dc5d6, 32'hff923a2a, 32'h6c2268, 32'hff9a6b51,
-            32'h5bc01a, 32'hffafb7e9, 32'h432ca5, 32'hffc9eecc,
-            32'h28f5c3, 32'hffe28241, 32'h1205bc, 32'hffeab368};
+        sh = {
+32'h1792F427,32'h01ABCEF5,32'h01BD683E,32'h01A3A813,
+32'h016F3058,32'h01AEAFF7,32'h01CEFF1B,32'h019F5E01,
+32'h017D28C2,32'h01B68311,32'h01C021FB,32'h019673FE,
+32'h01865B4F,32'h01B7EEFE,32'h01C0AB74,32'h01909025,
+32'h01909025,32'h01C0AB74,32'h01B7EEFE,32'h01865B4F,
+32'h019673FE,32'h01C021FB,32'h01B68311,32'h017D28C2,
+32'h019F5E01,32'h01CEFF1B,32'h01AEAFF7,32'h016F3058,
+32'h01A3A813,32'h01BD683E,32'h01ABCEF5,32'h1792F427
+};
         @(negedge clock);
         weight_en <= '0;
     end
