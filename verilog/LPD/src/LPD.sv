@@ -34,7 +34,21 @@ module LPD #(parameter IN_W = 3, R_IN = 0, AAF_W = 32, R_AAF = 36, OUT_W = 32, R
         end
         for (int i = NUM_CHAINS; i < NUM_ACC; i = i + 1)
         begin
-            prod[i] = (data_in * AAF[NUM_ACC-1-i][CHAIN_W-1-chain_cnt]) >>> SHIFT_VAL;
+            if (i == NUM_ACC-1 && chain_cnt == CHAIN_W-1)
+            begin
+                prod[i] = '0;
+            end
+            else
+            begin
+                if (chain_cnt == CHAIN_W-1)
+                begin
+                    prod[i] = (data_in * AAF[NUM_ACC-2-i][CHAIN_W-1]) >>> SHIFT_VAL;
+                end
+                else
+                begin
+                    prod[i] = (data_in * AAF[NUM_ACC-1-i][CHAIN_W-2-chain_cnt]) >>> SHIFT_VAL;
+                end
+            end
         end
     end
 
@@ -57,7 +71,6 @@ module LPD #(parameter IN_W = 3, R_IN = 0, AAF_W = 32, R_AAF = 36, OUT_W = 32, R
             begin
                 if (chain_cnt == CHAIN_W-1)
                 begin
-                    $display("%d %d", acc[NUM_CHAINS].data, acc[NUM_CHAINS].valid);
                     chain_cnt   <= '0;
                     // output is the current last accumulator
                     valid_out   <= acc[NUM_ACC-1].valid;

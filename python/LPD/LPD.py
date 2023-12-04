@@ -32,18 +32,15 @@ with open("data/sim_u.txt", 'w') as file:
 
 u0_idx = 12799
 u = np.zeros(2488) # (96000 - 12800 - 3584)/32
-modified_AAF = np.zeros(3584)
+modified_AAF = np.zeros(3583)
 
 for i in range(9):
     modified_AAF[i] = 0
 
-for i in range(9, N_AAF + 10):
-    if (i <= 1791):
-        modified_AAF[i] = AAF[i-9]
-    else:
-        modified_AAF[i] = AAF[i-10]
+for i in range(9, N_AAF + 9):
+    modified_AAF[i] = AAF[i-9]
 
-for i in range(10 + N_AAF, 10 + N_AAF + 9):
+for i in range(9 + N_AAF, 9 + N_AAF + 9):
     modified_AAF[i] = 0
     
 with open("data/modified_AAF.txt", 'w') as file:
@@ -51,7 +48,7 @@ with open("data/modified_AAF.txt", 'w') as file:
         file.write(str(data) + '\n')
 
 for i in range(2488):
-    for j in range(3584):
+    for j in range(3583):
         u[i] += modified_AAF[j] * u0[j + u0_idx]
     
     u0_idx += 32
