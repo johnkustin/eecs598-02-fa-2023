@@ -34,7 +34,7 @@ module testbench;
         $sdf_annotate("results/Shat.mapped.sdf", f0); // this line will cause some warnings when you run the *NON SYNTHESIZED* version of the hardware 
     end
     
-    fir_filter #(.N(N), .IN_W(IN_W), .OUT_W(OUT_W), .COEFF_W(COEFF_W), .R_IN(R_IN), .R_OUT(R_OUT), .R_COEFF(R_COEFF)) f0
+    W #(.N(N), .IN_W(IN_W), .OUT_W(OUT_W), .COEFF_W(COEFF_W), .R_IN(R_IN), .R_OUT(R_OUT), .R_COEFF(R_COEFF)) f0
     (
         .clock              (clock),
         .reset              (reset),

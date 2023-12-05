@@ -1,13 +1,13 @@
-module fir_filter # (parameter N = 32, IN_W = 32, OUT_W = 32, COEFF_W = 32, R_IN = 31, R_OUT = 31, R_COEFF = 30)
+module W # (parameter N = 32, IN_W = 32, OUT_W = 32, COEFF_W = 32, R_IN = 31, R_OUT = 31, R_COEFF = 30)
 (
-    input                           clock,
-    input                           reset,
-    input logic                     valid_in,
-    input wire                      weight_load_en,
-    input logic signed  [IN_W-1:0]   data_in,
-    input wire  signed  [COEFF_W-1:0] weight_in [0:N-1],
-    output logic signed [OUT_W-1:0] data_out,
-    output logic                    valid_out
+    input                               clock,
+    input                               reset,
+    input logic                         valid_in,
+    input wire                          weight_load_en,
+    input logic signed  [IN_W-1:0]      data_in,
+    input logic signed  [COEFF_W-1:0]   weight_in [N],
+    output logic signed [OUT_W-1:0]     data_out,
+    output logic                        valid_out
 );  
 
     // parameter logic signed [COEFF_W-1:0] sh [0:N-1] = {32'hffec56d6, 32'hff645a1d, 32'h226809d, 32'hef295e9e,
@@ -20,7 +20,7 @@ module fir_filter # (parameter N = 32, IN_W = 32, OUT_W = 32, COEFF_W = 32, R_IN
     //                                                 32'h28f5c3, 32'hffe28241, 32'h1205bc, 32'hffeab368};
 
 
-    reg signed [COEFF_W-1:0] w [0:N-1];
+    reg signed [COEFF_W-1:0] w [N];
     
     localparam OUT_MAX      = 2**(OUT_W-1)-1;
     localparam OUT_MIN      = -2**(OUT_W-1);
@@ -75,7 +75,7 @@ module fir_filter # (parameter N = 32, IN_W = 32, OUT_W = 32, COEFF_W = 32, R_IN
             if (weight_load_en) 
             begin
               for (int i = 0; i < N; i = i + 1)
-                w[i] <= weight_in[i];
+                w[i] <= w[i] + weight_in[i];
             end
         end
     end
