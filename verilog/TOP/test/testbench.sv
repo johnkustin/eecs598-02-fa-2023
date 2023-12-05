@@ -4,7 +4,7 @@
 module testbench;
     
     localparam BW_P = 32;
-    localparam INPUT_N = 1024;
+    localparam INPUT_N  = 1024;
     localparam N        = 32;
     localparam K        = 32; // K is oversampling ratio
     localparam IN_W     = 32;
@@ -12,23 +12,24 @@ module testbench;
     localparam COEFF_W  = 32;
     localparam R_IN     = 31;
     localparam R_OUT    = 31;
-    localparam R_COEFF     = 31;
+    localparam R_COEFF  = 31;
+    localparam QNS_BW   = 3;
 
 
     logic clk, rst_n;
     logic valid_out, valid_in;
 
+    // inputs
     logic [BW_P-1:0] upg [0:INPUT_N-1]; // up golden
     logic [BW_P-1:0] upg_in;
 
-    logic [BW_P-1:0] epg [0:INPUT_N-1]; // ep golden
-    logic [BW_P-1:0] epg_in;
 
-    logic signed [OUT_W-1:0]    data_out;
+    // outputs
+    logic signed [OUT_W-1:0] u_out, e_out, d_out, u1_out, eh_out, dh_out, y_out;
+    logic signed [QNS_BW-1:0] u0_out, y0_out, e0_out, w0_out;
 
     integer out_cnt, data_cnt, clk_cnt;
     integer out_file;
-
 
 
     initial 
@@ -58,10 +59,10 @@ always @(negedge clk)
     begin
         if (rst_n == 0)
         begin
-            clk_cnt   <= 0;
-            data_cnt    <= 0;
+            clk_cnt     <= '0;
+            data_cnt    <= '0;
             valid_in    <= 1'b0;
-            upg_in     <= '0;
+            upg_in      <= '0;
         end
         else
         begin
@@ -78,7 +79,6 @@ always @(negedge clk)
                 begin
                     valid_in    <= 1'b1;
                     upg_in     <= upg[data_cnt];
-                    epg_in     <= epg[data_cnt];
                     data_cnt    <= data_cnt + 1;
                 end
                 else
@@ -112,7 +112,7 @@ always @(negedge clk)
         if (valid_out)
         begin
             out_cnt <= out_cnt + 1;
-            $fdisplay(out_file, "%d", data_out);
+            $fdisplay(out_file, "%d", u_out, e_out, d_out);
         end
         if (out_cnt == INPUT_N)
         begin
