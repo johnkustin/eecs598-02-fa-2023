@@ -25,28 +25,31 @@ all:	simv
 # Modify starting here
 #####
 
+TESTBENCH = test/testbench.sv
+SIMFILES = src/top.sv src/sys_defs.svh ../LMS/src/LMS.sv ../LMS/memory/verilog/SRAM_128_12.v ../Shat/src/Shat.sv ../W/src/W.sv ../W_top/src/W_top.sv ../LPD/src/LPD.sv ../QNS/src/mod2.v
+SYNFILES = results/LMS.mapped.v memory/verilog/SRAM_128_12.v  
 SYN_SIM_OPTS = +neg_tchk 
 
 
 #####
 # Should be no need to modify after here
 #####
-simv:	
-	$(VCS) $(TESTBENCH) -f flist.v -o simv | tee simv.log
+simv:	$(SIMFILES) $(TESTBENCH)
+	$(VCS) $(TESTBENCH) $(SIMFILES) -o simv | tee simv.log
 
-dve:	
-	$(VCS) $(TESTBENCH) -f flist.v -o dve -R -gui -debug_acccess+all -kdb | tee dve.log
+dve:	$(SIMFILES) $(TESTBENCH) 
+	$(VCS) $(TESTBENCH) $(SIMFILES) -o dve -R -gui -debug_acccess+all -kdb | tee dve.log
 
 .PHONY: dve
 
-fir_filter.vg: $(SIMFILES) old_scripts/synth.tcl
-	dc_shell-t -f old_scripts/synth.tcl | tee synth.out
-
 syn_simv:	$(SYNFILES) $(TESTBENCH)
-	$(VCS) $(SYN_SIM_OPTS) $(TESTBENCH) $(SYNFILES) $(LIB) -o syn_simv | tee syn_simv.log
+	$(VCS) $(TESTBENCH) $(SYNFILES) $(LIB) -o syn_simv | tee syn_simv.log
 
 syn:	syn_simv
 	./syn_simv | tee syn_program.out | tee syn.log
+
+memgen:
+	cd memory; ./memgen.sh
 
 syn_NEW:
 		-mkdir -p logs
@@ -66,4 +69,5 @@ clean:
         inter.fsdb novas* verdiLog	
 
 nuke:	clean
-	rm -rvf verdi_config_file *.vg *.rep *.db *.chk *.log *.out *.ddc *.svf DVEfiles/ export/ logs/ reports/ results/ temp_files/ Shat_dclib/ alib-52/
+	rm -rvf verdi_config_file *.vg *.rep *.db *.chk *.log *.out *.ddc *.svf .inter.fsdb.tbsim DVEfiles/ export/ logs/ reports/ results/ temp_files/ LMS_dclib/ alib-52/ memory/db/ \
+	memory/results/ memory/verilog/ memory/*.log memory/mc_work/*

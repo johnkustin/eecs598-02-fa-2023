@@ -1,0 +1,39 @@
+Reading '/home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/char_results/lib_ccs/SRAM_128_12_min_1d16_25_ccs.lib' ...
+Warning: Line 1, No default 'normalized_driver_waveform" group defined in 'library'. (LBDB-788)
+Warning: Line 1, The 'internal_power_calculation' attribute in char_config group is required for NLPM library. 
+	No default can be applied to this attribute. (LBDB-366)
+Warning: Line 3138, Cell 'SRAM_128_12', pin 'A[0]', The CCS receiver data is not present, so
+	accuracy can be deteriorated.   (LBDB-819)
+Warning: Line 2496, Cell 'SRAM_128_12', pin 'CE', The pin 'CE' does not have a internal_power group. (LBDB-607)
+Warning: Line 2520, Cell 'SRAM_128_12', pin 'CSB', The max value of 1st index of group 'receiver_capacitance1_fall' is 0.853537,
+	which is less than max transition of pin 'CSB', 1.024. (LBDB-680)
+Warning: Line 2524, Cell 'SRAM_128_12', pin 'CSB', The max value of 1st index of group 'receiver_capacitance1_rise' is 0.850293,
+	which is less than max transition of pin 'CSB', 1.024. (LBDB-680)
+Warning: Line 2607, Cell 'SRAM_128_12', pin 'WEB', The max value of 1st index of group 'receiver_capacitance1_fall' is 0.853646,
+	which is less than max transition of pin 'WEB', 1.024. (LBDB-680)
+Warning: Line 2611, Cell 'SRAM_128_12', pin 'WEB', The max value of 1st index of group 'receiver_capacitance1_rise' is 0.852845,
+	which is less than max transition of pin 'WEB', 1.024. (LBDB-680)
+Warning: Line 2625, Cell 'SRAM_128_12', pin 'OEB', The pin 'OEB' does not have a internal_power group. (LBDB-607)
+Warning: Line 2655, Cell 'SRAM_128_12', pin 'I[11]', The max value of 1st index of group 'receiver_capacitance1_fall' is 0.856529,
+	which is less than max transition of pin 'I[11]', 1.024. (LBDB-680)
+Warning: Line 2659, Cell 'SRAM_128_12', pin 'I[11]', The max value of 1st index of group 'receiver_capacitance1_rise' is 0.856648,
+	which is less than max transition of pin 'I[11]', 1.024. (LBDB-680)
+Warning: Line 2759, Cell 'SRAM_128_12', pin 'O[11]', The max value of 1st index of group 'receiver_capacitance1_fall' is 0.854488,
+	which is less than max transition of pin 'CE', 1.024. (LBDB-680)
+Warning: Line 2770, Cell 'SRAM_128_12', pin 'O[11]', The max value of 1st index of group 'receiver_capacitance1_rise' is 0.850098,
+	which is less than max transition of pin 'CE', 1.024. (LBDB-680)
+Warning: Line 2803, Cell 'SRAM_128_12', pin 'O[11]', The max value of 1st index of group 'receiver_capacitance1_fall' is 0.851887,
+	which is less than max transition of pin 'CE', 1.024. (LBDB-680)
+Warning: Line 2814, Cell 'SRAM_128_12', pin 'O[11]', The max value of 1st index of group 'receiver_capacitance1_rise' is 0.851058,
+	which is less than max transition of pin 'CE', 1.024. (LBDB-680)
+Warning: Line 3055, Cell 'SRAM_128_12', pin 'O[11]', The max value of 1st index of group 'receiver_capacitance1_fall' is 0.78909,
+	which is less than max transition of pin 'OEB', 1.024. (LBDB-680)
+Warning: Line 3066, Cell 'SRAM_128_12', pin 'O[11]', The max value of 1st index of group 'receiver_capacitance1_rise' is 0.768067,
+	which is less than max transition of pin 'OEB', 1.024. (LBDB-680)
+Information: Line 3100, Cell 'SRAM_128_12', pin 'O[11]', The CCS data output_current_rise is not present, so
+	accuracy can be deteriorated.   (LBDB-823)
+Information: Line 3100, Cell 'SRAM_128_12', pin 'O[11]', The CCS data output_current_fall is not present, so
+	accuracy can be deteriorated.   (LBDB-823)
+Information: Line 2478, Cell 'SRAM_128_12', The cell 'SRAM_128_12' contiains memory/memory_read/memory_write groups which are deprecated, use the is_memory_cell attribute instead. (LIBG-280)
+Technology library 'SRAM_128_12_min_1d16_25_ccs' read successfully
+1

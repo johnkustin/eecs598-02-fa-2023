@@ -1,0 +1,121 @@
+
+  
+                         SAED Memory Compiler
+                   Version 3.0.0  -- July 1, 2019
+               Copyright (c) 2012-2019 Synopsys, Inc.
+
+This software and the associated documentation are confidential and 
+proprietary to Synopsys, Inc. Your use or disclosure of this software 
+is subject to the terms and conditions of a written license agreement 
+between you, or your company, and Synopsys, Inc.
+
+
+INFO: Working directory: /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work
+======================================================================
+Setting          Is Default? Value                                   
+----------------------------------------------------------------------
+work_dir         user       /home/rsomvan/VSLI_598/eecs598-02-fa-202
+word_count       =          128                                     
+word_bits        =          12                                      
+mem_type         =          single_32                               
+instance_name    user       SRAM_128_12                             
+do_toolchoose    default    hercules                                
+do_spice         user       0                                       
+do_rcx           default    0                                       
+do_lvs           user       0                                       
+do_logic         user       1                                       
+do_lib_nldm      default    0                                       
+do_lib_ccs       user       1                                       
+do_lib           user       1                                       
+do_lef           default    0                                       
+do_layout        user       0                                       
+do_gds           user       0                                       
+do_drc           default    0                                       
+do_cx            default    0                                       
+======================================================================
+INFO: Working direcory does not exist, creating: /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work
+INFO: Wrote Verilog. 
+INFO: Wrote VHDL. 
+INFO: Wrote Verilog (TMAX). 
+INFO: Wrote Verilog (LP TMAX). 
+WARNING: Lib generation requires do_lef enabled to calculate area
+Area was replaced by default number 2000
+
+INFO: Wrote Liberty. 
+INFO: Compiling Liberty. 
+######################################################################
+INFO: Running  lc_shell   ...
+INFO: Run log is being written to /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/dc_results/_run.log 
+----------------------------------------------------------------------
+INFO: Job  lc_shell   finished successfully
+######################################################################
+INFO: Done compiling Liberty. 
+WARNING: Lib generation requires do_lef enabled to calculate area
+Area was replaced by default number 2000
+
+INFO: Wrote Liberty. 
+INFO: Compiling Liberty. 
+INFO: Compiling SRAM_128_12_typ_1d05_125_ccs.db...
+######################################################################
+INFO: Running  lc_shell   ...
+INFO: Run log is being written to /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/dc_results/_run.log 
+----------------------------------------------------------------------
+INFO: Job  lc_shell   finished successfully
+######################################################################
+INFO: Compiling SRAM_128_12_max_0d95_m40_ccs.db...
+######################################################################
+INFO: Running  lc_shell   ...
+INFO: Run log is being written to /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/dc_results/_run.log 
+----------------------------------------------------------------------
+INFO: Job  lc_shell   finished successfully
+######################################################################
+INFO: Compiling SRAM_128_12_min_1d16_m40_ccs.db...
+######################################################################
+INFO: Running  lc_shell   ...
+INFO: Run log is being written to /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/dc_results/_run.log 
+----------------------------------------------------------------------
+INFO: Job  lc_shell   finished successfully
+######################################################################
+INFO: Compiling SRAM_128_12_max_0d95_25_ccs.db...
+######################################################################
+INFO: Running  lc_shell   ...
+INFO: Run log is being written to /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/dc_results/_run.log 
+----------------------------------------------------------------------
+INFO: Job  lc_shell   finished successfully
+######################################################################
+INFO: Compiling SRAM_128_12_min_1d16_25_ccs.db...
+######################################################################
+INFO: Running  lc_shell   ...
+INFO: Run log is being written to /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/dc_results/_run.log 
+----------------------------------------------------------------------
+INFO: Job  lc_shell   finished successfully
+######################################################################
+INFO: Compiling SRAM_128_12_min_1d16_125_ccs.db...
+######################################################################
+INFO: Running  lc_shell   ...
+INFO: Run log is being written to /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/dc_results/_run.log 
+----------------------------------------------------------------------
+INFO: Job  lc_shell   finished successfully
+######################################################################
+INFO: Compiling SRAM_128_12_max_0d95_125_ccs.db...
+######################################################################
+INFO: Running  lc_shell   ...
+INFO: Run log is being written to /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/dc_results/_run.log 
+----------------------------------------------------------------------
+INFO: Job  lc_shell   finished successfully
+######################################################################
+INFO: Compiling SRAM_128_12_typ_1d05_25_ccs.db...
+######################################################################
+INFO: Running  lc_shell   ...
+INFO: Run log is being written to /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/dc_results/_run.log 
+----------------------------------------------------------------------
+INFO: Job  lc_shell   finished successfully
+######################################################################
+INFO: Compiling SRAM_128_12_typ_1d05_m40_ccs.db...
+######################################################################
+INFO: Running  lc_shell   ...
+INFO: Run log is being written to /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/dc_results/_run.log 
+----------------------------------------------------------------------
+INFO: Job  lc_shell   finished successfully
+######################################################################
+INFO: Done compiling Liberty. 

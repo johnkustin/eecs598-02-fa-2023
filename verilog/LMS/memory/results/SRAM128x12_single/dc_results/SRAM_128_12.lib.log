@@ -1,0 +1,51 @@
+Reading '/home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12.lib' ...
+Warning: Line 4, The 'default_rise_delay_intercept' attribute is not specified. Using 0.00. (LBDB-172)
+Warning: Line 4, The 'default_output_pin_rise_res' attribute is not specified. Using 0.00. (LBDB-172)
+Warning: Line 4, The 'default_inout_pin_fall_res' attribute is not specified. Using 0.00. (LBDB-172)
+Warning: Line 4, The 'default_inout_pin_rise_res' attribute is not specified. Using 0.00. (LBDB-172)
+Warning: Line 4, The 'default_fanout_load' attribute is not specified. Using 1.00. (LBDB-172)
+Warning: Line 4, The 'default_fall_delay_intercept' attribute is not specified. Using 0.00. (LBDB-172)
+Warning: Line 4, The 'default_slope_rise' attribute is not specified. Using 0.00. (LBDB-172)
+Warning: Line 4, The 'default_output_pin_fall_res' attribute is not specified. Using 0.00. (LBDB-172)
+Warning: Line 4, The 'default_intrinsic_rise' attribute is not specified. Using 1.00. (LBDB-172)
+Warning: Line 4, The 'default_rise_pin_resistance' attribute is not specified. Using 0.00. (LBDB-172)
+Warning: Line 4, The 'default_slope_fall' attribute is not specified. Using 0.00. (LBDB-172)
+Warning: Line 4, The 'default_intrinsic_fall' attribute is not specified. Using 1.00. (LBDB-172)
+Warning: Line 4, The 'default_fall_pin_resistance' attribute is not specified. Using 0.00. (LBDB-172)
+Warning: Line 4, No 'pulling_resistance_unit' attribute has been specified for the
+	library. This attribute is needed in technology libraries. (LBDB-238)
+Error: Line 10, The voltage value 0.000000 of the 1st voltage_map 'VSS' is not the same as
+	the value of 'voltage' of the default operating_conditions 'default_operating_conditions'. (LBDB-722)
+Warning: Line 4, The attribute 'slew_lower_threshold_pct_rise' is not specified. (LBDB-605)
+Warning: Line 4, The attribute 'slew_upper_threshold_pct_rise' is not specified. (LBDB-605)
+Warning: Line 4, The attribute 'slew_lower_threshold_pct_fall' is not specified. (LBDB-605)
+Warning: Line 4, The attribute 'slew_upper_threshold_pct_fall' is not specified. (LBDB-605)
+Warning: Line 4, The attribute 'input_threshold_pct_rise' is not specified. (LBDB-605)
+Warning: Line 4, The attribute 'output_threshold_pct_rise' is not specified. (LBDB-605)
+Warning: Line 4, The attribute 'input_threshold_pct_fall' is not specified. (LBDB-605)
+Warning: Line 4, The attribute 'output_threshold_pct_fall' is not specified. (LBDB-605)
+Warning: Line 157, Cell 'SRAM_128_12', pin 'O[0]', The 'O[0]' Pin/bus on the 'SRAM_128_12' cell has no 'function' attribute.
+	The cell becomes a black box. (LIBG-16)
+Warning: Line 163, Cell 'SRAM_128_12', pin 'O[1]', The 'O[1]' Pin/bus on the 'SRAM_128_12' cell has no 'function' attribute.
+	The cell becomes a black box. (LIBG-16)
+Warning: Line 169, Cell 'SRAM_128_12', pin 'O[2]', The 'O[2]' Pin/bus on the 'SRAM_128_12' cell has no 'function' attribute.
+	The cell becomes a black box. (LIBG-16)
+Warning: Line 175, Cell 'SRAM_128_12', pin 'O[3]', The 'O[3]' Pin/bus on the 'SRAM_128_12' cell has no 'function' attribute.
+	The cell becomes a black box. (LIBG-16)
+Warning: Line 181, Cell 'SRAM_128_12', pin 'O[4]', The 'O[4]' Pin/bus on the 'SRAM_128_12' cell has no 'function' attribute.
+	The cell becomes a black box. (LIBG-16)
+Warning: Line 187, Cell 'SRAM_128_12', pin 'O[5]', The 'O[5]' Pin/bus on the 'SRAM_128_12' cell has no 'function' attribute.
+	The cell becomes a black box. (LIBG-16)
+Warning: Line 193, Cell 'SRAM_128_12', pin 'O[6]', The 'O[6]' Pin/bus on the 'SRAM_128_12' cell has no 'function' attribute.
+	The cell becomes a black box. (LIBG-16)
+Warning: Line 199, Cell 'SRAM_128_12', pin 'O[7]', The 'O[7]' Pin/bus on the 'SRAM_128_12' cell has no 'function' attribute.
+	The cell becomes a black box. (LIBG-16)
+Warning: Line 205, Cell 'SRAM_128_12', pin 'O[8]', The 'O[8]' Pin/bus on the 'SRAM_128_12' cell has no 'function' attribute.
+	The cell becomes a black box. (LIBG-16)
+Warning: Line 211, Cell 'SRAM_128_12', pin 'O[9]', The 'O[9]' Pin/bus on the 'SRAM_128_12' cell has no 'function' attribute.
+	The cell becomes a black box. (LIBG-16)
+Warning: Line 217, Cell 'SRAM_128_12', pin 'O[10]', The 'O[10]' Pin/bus on the 'SRAM_128_12' cell has no 'function' attribute.
+	The cell becomes a black box. (LIBG-16)
+Warning: Line 223, Cell 'SRAM_128_12', pin 'O[11]', The 'O[11]' Pin/bus on the 'SRAM_128_12' cell has no 'function' attribute.
+	The cell becomes a black box. (LIBG-16)
+0

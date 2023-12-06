@@ -1,0 +1,7 @@
+#@ # 
+#@ # Running lc_shell Version T-2022.03-SP3 for linux64 -- Jul 13, 2022
+#@ # Date:   Wed Dec  6 03:59:01 2023
+#@ # Run by: rsomvan@uglb000p05.engin.umich.edu
+#@ 
+
+source -echo -verbose /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/dc_results/temporary_script_for_db_creation.tcl

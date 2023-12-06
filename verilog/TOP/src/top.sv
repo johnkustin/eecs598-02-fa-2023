@@ -16,7 +16,7 @@ module top
     // DECLARATIONS
     
     // BOOTUP SIGNAL
-    logic bootup_done; // TODO
+    logic bootup_done;
 
     // PRIMARY PATH
 
@@ -39,11 +39,11 @@ module top
 
     //LPD1 -> Shat1
     logic                   lpd1_to_shat1_valid;
-    logic signed [`U_N-1:0] lpd1_to_shat1_data;
+    logic signed [`U_W-1:0] lpd1_to_shat1_data;
 
     //LPD1 -> W1
     logic                   lpd1_to_w1_valid;
-    logic signed [`U_N-1:0] lpd1_to_w1_data;
+    logic signed [`U_W-1:0] lpd1_to_w1_data;
 
     //Shat1 -> W2
     logic signed [`U1_W-1:0]    shat1_to_w2_data;
@@ -118,12 +118,11 @@ module top
     (   
         .clock      (clock),
         .reset      (reset),
-        .en         (),
         .valid_in   (up_valid_in),
         .in         (up_data_in),
         .out        (qns1_to_lpd1_data),
         .out_scaled (),
-        .out_valid  (qns1_to_lpd1_valid)
+        .valid_out  (qns1_to_lpd1_valid)
     );
 
     // QNS1 -> W0
@@ -183,12 +182,11 @@ module top
     (   
         .clock      (clock),
         .reset      (reset),
-        .en         (), // do you want to delete this?
         .valid_in   (w0_to_qns3_valid),
         .in         (-w0_to_qns3_data),
         .out        (qns3_data_out),
         .out_scaled (),
-        .out_valid  (y0_valid_out)
+        .valid_out  (y0_valid_out)
     );
 
     assign y0_data_out = qns3_data_out <<< 1; // multiply by 2
@@ -235,6 +233,7 @@ module top
     assign shat1_to_lms_data    = shat1_to_w2_data;
     assign shat1_to_lms_valid   = shat1_to_w2_valid;
 
+    // NOTE: W may be the critical path. Potentially add a buffer for the products
     W #(
         .N          (`W_N),
         .IN_W       (`U_W),
@@ -305,12 +304,11 @@ module top
     (   
         .clock      (clock),
         .reset      (reset),
-        .en         (), // do you want to delete this?
         .valid_in   (ep_valid_in),
         .in         (ep_data_in),
         .out        (qns4_data_out),
         .out_scaled (),
-        .out_valid  (qns4_valid_out)
+        .valid_out  (qns4_valid_out)
     );
     
     // qns4 -> LPD2 passthrough
@@ -326,11 +324,11 @@ module top
             qns4_to_lpd2_valid <= qns4_valid_out;
             if (qns4_data_out == -3)
             begin
-                qns4_to_lpd2_data <= `QNS4_FINAL_OUT_neg_3;
+                qns4_to_lpd2_data <= -(`QNS4_FINAL_OUT_3);
             end
             else if (qns4_data_out == -1)
             begin
-                qns4_to_lpd2_data <= `QNS4_FINAL_OUT_neg_1;
+                qns4_to_lpd2_data <= -(`QNS4_FINAL_OUT_1);
             end
             else if (qns4_data_out == 1)
             begin
@@ -345,7 +343,7 @@ module top
 
     LPD #(
         .IN_W   (`E0_W),
-        .R_IN   (R_E0), // TODO -> Double check this module works for non-zero R
+        .R_IN   (`R_E0), // TODO -> Double check this module works for non-zero R
         .AAF_W  (`AAF_W),
         .R_AAF  (`R_AAF),
         .OUT_W  (`DH_W),
@@ -385,7 +383,7 @@ module top
         .R_A_OUT    (`R_LMS_LUT_OUT),
         .R_A_IN     (`R_LMS_LUT_IN),
         .R_EH_IN    (`R_EH),
-        .R_U1_IN    (`R_U1_IN),
+        .R_U1_IN    (`R_U1),
         .R_OUT      (`R_W_COEFF),
         .MU         (`MU),
         .OFFSET     (`OFFSET)
@@ -417,7 +415,7 @@ module top
             begin
                 if (qns2_to_w0_idx == `W0_N-1)
                 begin
-                    qns_2_to_w0_idx <= '0;
+                    qns2_to_w0_idx <= '0;
                 end
                 else
                 begin
@@ -437,12 +435,11 @@ module top
     (   
         .clock      (clock),
         .reset      (reset),
-        .en         (), 
         .valid_in   (bootup_done), // TODO: think more about this, possibly extrapolate to more places
         .in         (w1_output_coeff),
         .out        (qns2_out_data),
         .out_scaled (),
-        .out_valid  (qns2_to_w0_valid)
+        .valid_out  (qns2_to_w0_valid)
     );
 
     always_comb

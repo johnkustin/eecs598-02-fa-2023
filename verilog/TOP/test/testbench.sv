@@ -1,124 +1,135 @@
-`timescale 1ns/1ps
-`define CLK_TON 354.308
+`include "src/sys_defs.svh"
 
 module testbench;
-    
-    localparam BW_P = 32;
-    localparam INPUT_N  = 1024;
-    localparam N        = 32;
-    localparam K        = 32; // K is oversampling ratio
-    localparam IN_W     = 32;
-    localparam OUT_W    = 32;
-    localparam COEFF_W  = 32;
-    localparam R_IN     = 31;
-    localparam R_OUT    = 31;
-    localparam R_COEFF  = 31;
-    localparam QNS_BW   = 3;
 
+    localparam NUM_UP = 96000;
+    localparam NUM_DP = 96000;
+    localparam NUM_SP = 1024;
+    localparam LMS_LUT_SIZE = 128;
 
-    logic clk, rst_n;
-    logic valid_out, valid_in;
+    // dut I/O
+    logic                       clock;
+    logic                       reset;
+    logic                       up_valid_in;
+    logic signed [`UP_W-1:0]    up_data_in;
+    logic                       ep_valid_in;
+    logic signed [`EP_W-1:0]    ep_data_in;
+    logic                       write_lms_lut_valid_in;
+    logic [`LMS_LUT_OUT_W-2:0]  write_lms_lut_data_in;
+    logic [`LMS_LUT_IN_W-2:0]   write_lms_lut_idx_in;
+    logic                       y0_valid_out;
+    logic signed [`Y0_W-1:0]    y0_data_out;
 
-    // inputs
-    logic [BW_P-1:0] upg [0:INPUT_N-1]; // up golden
-    logic [BW_P-1:0] upg_in;
+    // internal testbench
+    logic signed [`UP_W-1:0] up_data_MEM [NUM_UP];
+    logic signed [`DP_W-1:0] dp_data_MEM [NUM_DP];
+    logic signed [`SP_W-1:0] sp_data_MEM [NUM_SP];
+    logic [`LMS_LUT_OUT_W-2:0] lms_LUT [LMS_LUT_SIZE];
+    integer up_num;
+    integer lms_num;
+    logic done_bootup;
+    integer y0_out_file;
 
+    top t0 
+    (
+        .clock                  (clock),
+        .reset                  (reset),
+        .up_valid_in            (up_valid_in),
+        .up_data_in             (up_data_in),
+        .ep_valid_in            (ep_valid_in),
+        .ep_data_in             (ep_data_in),
+        .write_lms_lut_valid_in (write_lms_lut_valid_in),
+        .write_lms_lut_data_in  (write_lms_lut_data_in),
+        .write_lms_lut_idx_in   (write_lms_lut_idx_in),
+        .y0_valid_out           (y0_valid_out),
+        .y0_data_out            (y0_data_out)
+    );
 
-    // outputs
-    logic signed [OUT_W-1:0] u_out, e_out, d_out, u1_out, eh_out, dh_out, y_out;
-    logic signed [QNS_BW-1:0] u0_out, y0_out, e0_out, w0_out;
-
-    integer out_cnt, data_cnt, clk_cnt;
-    integer out_file;
-
-
-    initial 
+    always
     begin
-        $dumpfile("testbench.vcd");
-        $dumpvars(0);	
-        $sdf_annotate("results/Shat.mapped.sdf", sh0); // this line will cause some warnings when you run the *NON SYNTHESIZED* version of the hardware 
-        
-        $readmemh("data/upg.txt",upg);
-        $readmemh("data/epg.txt",epg);
-        out_file = $fopen("top_out.txt");
-    	
+        #5
+        clock = ~clock;
+    end
+    
+    initial
+    begin
+        // initialize up_data_MEM
+        // initialize lms_LUT
+        $readmemh("data/up.mem", up_data_MEM);
+        $readmemh("data/dp.mem", dp_data_MEM);
+        $readmemh("data/sp.mem", sp_data_MEM);
+        $readmemh("../LMS/data/adjRecipLutVals.mem", lms_LUT);
     end
 
-////////////
-// Module here
-////////////
-
-top xtop;
-
-
-always begin
-    #`CLK_TON clk <= ~clk;
-end
-
-always @(negedge clk)
+    // just for compile check
+    assign ep_valid_in = 1'b0;
+    assign ep_data_in = '0;
+    // input
+    always @(negedge clock)
     begin
-        if (rst_n == 0)
+        if (reset)
         begin
-            clk_cnt     <= '0;
-            data_cnt    <= '0;
-            valid_in    <= 1'b0;
-            upg_in      <= '0;
+            up_valid_in <= 1'b0;
+            up_data_in <= '0;
+            done_bootup <= '0;
+            write_lms_lut_idx_in <= '0;
+            write_lms_lut_valid_in <= 1'b0;
+            write_lms_lut_data_in <= '0;
+            lms_num <= '0;
+            up_num <= 12799;
         end
         else
         begin
-            clk_cnt <= clk_cnt + 1;
-
-            if (data_cnt == INPUT_N)
+            if (done_bootup)
             begin
-                valid_in    <= 1'b0;
-                upg_in     <= '0;
-            end
-            else
-            begin
-                if (clk_cnt % K == 0) 
+                write_lms_lut_valid_in <= 1'b0;
+                if (up_num == NUM_UP)
                 begin
-                    valid_in    <= 1'b1;
-                    upg_in     <= upg[data_cnt];
-                    data_cnt    <= data_cnt + 1;
+                    $fclose(y0_out_file);
+                    $finish;
                 end
                 else
                 begin
-                    valid_in    <= 1'b0;
-                    upg_in     <= '0;
+                    up_valid_in <= 1'b1;
+                    up_data_in  <= up_data_MEM[up_num];
+                    up_num <= up_num + 1;
                 end
+            end
+            else
+            begin
+                up_valid_in <= 1'b0;
+                write_lms_lut_valid_in <= 1'b1;
+                if (lms_num == LMS_LUT_SIZE-1)
+                begin
+                    done_bootup <= 1'b1;
+                end
+                write_lms_lut_idx_in <=  lms_num;
+                write_lms_lut_data_in <= lms_LUT[lms_num];
+                lms_num <= lms_num + 1;
             end
         end
     end
 
-    initial 
+    // outputs
+    always @(negedge clock)
     begin
-        clk <= 0; rst_n <= 1;
-        @(negedge clk)
-            rst_n <= 0;
-        @(negedge clk);
-        @(negedge clk)
-            rst_n <= 1;
-
-        $finish;
-        $fclose(out_file);
+        if (y0_valid_out)
+        begin
+            $fdisplay(y0_out_file, "%d", y0_data_out);
+        end
     end
 
-always @(negedge clk)
+    initial
     begin
-        if (rst_n==0)
-        begin
-            out_cnt <= 0;
-        end
-        if (valid_out)
-        begin
-            out_cnt <= out_cnt + 1;
-            $fdisplay(out_file, "%d", u_out, e_out, d_out);
-        end
-        if (out_cnt == INPUT_N)
-        begin
-            $fclose(out_file);
-            $finish;
-        end
+        y0_out_file = $fopen("../../python/TOP/data/y0_results.txt");
+        clock = 0;
+        reset = 1;
+        @(negedge clock);
+        @(negedge clock);
+        reset = 0;
+        @(negedge clock);
     end
+
+
 
 endmodule

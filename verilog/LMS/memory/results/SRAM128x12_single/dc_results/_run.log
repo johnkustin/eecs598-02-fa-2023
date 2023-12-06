@@ -1,0 +1,340 @@
+
+                             Library Compiler (TM)
+                                 DesignWare (R)
+
+             Version T-2022.03-SP3 for linux64 - Jul 13, 2022 -SLE
+
+                    Copyright (c) 1988 - 2022 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+   or distribution of this software is strictly prohibited.  Licensed Products
+     communicate with Synopsys servers for the purpose of providing software
+    updates, detecting software piracy and verifying that customers are using
+    Licensed Products in conformity with the applicable License Key for such
+  Licensed Products. Synopsys will use information gathered in connection with
+    this process to deliver software updates and pursue software pirates and
+                                   infringers.
+
+ Inclusivity & Diversity - Visit SolvNetPlus to read the "Synopsys Statement on
+            Inclusivity and Diversity" (Refer to article 000036315 at
+                        https://solvnetplus.synopsys.com)
+ 
+Initializing...
+read_lib /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12.lib > SRAM_128_12.lib.log 
+write_lib SRAM_128_12 -format db  -output /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12.db 
+Warning: The 'SRAM_128_12' library has not been read in yet. (UIL-3)
+0
+exit
+Maximum memory usage for this session: 104.93 MB
+CPU usage for this session:      1 seconds (  0.00 hours)
+Elapsed time for this session:    109 seconds (  0.03 hours)
+Thank you for using Library Compiler.
+
+Thank you...
+
+                             Library Compiler (TM)
+                                 DesignWare (R)
+
+             Version T-2022.03-SP3 for linux64 - Jul 13, 2022 -SLE
+
+                    Copyright (c) 1988 - 2022 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+   or distribution of this software is strictly prohibited.  Licensed Products
+     communicate with Synopsys servers for the purpose of providing software
+    updates, detecting software piracy and verifying that customers are using
+    Licensed Products in conformity with the applicable License Key for such
+  Licensed Products. Synopsys will use information gathered in connection with
+    this process to deliver software updates and pursue software pirates and
+                                   infringers.
+
+ Inclusivity & Diversity - Visit SolvNetPlus to read the "Synopsys Statement on
+            Inclusivity and Diversity" (Refer to article 000036315 at
+                        https://solvnetplus.synopsys.com)
+ 
+Initializing...
+read_lib /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/char_results/lib_ccs/SRAM_128_12_typ_1d05_125_ccs.lib > SRAM_128_12_typ_1d05_125_ccs.lib.log 
+write_lib SRAM_128_12_typ_1d05_125_ccs -format db  -output /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_typ_1d05_125_ccs.db 
+Wrote the 'SRAM_128_12_typ_1d05_125_ccs' library to '/home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_typ_1d05_125_ccs.db' successfully
+1
+exit
+Maximum memory usage for this session: 106.95 MB
+CPU usage for this session:      1 seconds (  0.00 hours)
+Elapsed time for this session:      9 seconds (  0.00 hours)
+Thank you for using Library Compiler.
+
+Thank you...
+
+                             Library Compiler (TM)
+                                 DesignWare (R)
+
+             Version T-2022.03-SP3 for linux64 - Jul 13, 2022 -SLE
+
+                    Copyright (c) 1988 - 2022 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+   or distribution of this software is strictly prohibited.  Licensed Products
+     communicate with Synopsys servers for the purpose of providing software
+    updates, detecting software piracy and verifying that customers are using
+    Licensed Products in conformity with the applicable License Key for such
+  Licensed Products. Synopsys will use information gathered in connection with
+    this process to deliver software updates and pursue software pirates and
+                                   infringers.
+
+ Inclusivity & Diversity - Visit SolvNetPlus to read the "Synopsys Statement on
+            Inclusivity and Diversity" (Refer to article 000036315 at
+                        https://solvnetplus.synopsys.com)
+ 
+Initializing...
+read_lib /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/char_results/lib_ccs/SRAM_128_12_max_0d95_m40_ccs.lib > SRAM_128_12_max_0d95_m40_ccs.lib.log 
+write_lib SRAM_128_12_max_0d95_m40_ccs -format db  -output /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_max_0d95_m40_ccs.db 
+Wrote the 'SRAM_128_12_max_0d95_m40_ccs' library to '/home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_max_0d95_m40_ccs.db' successfully
+1
+exit
+Maximum memory usage for this session: 106.95 MB
+CPU usage for this session:      1 seconds (  0.00 hours)
+Elapsed time for this session:      9 seconds (  0.00 hours)
+Thank you for using Library Compiler.
+
+Thank you...
+
+                             Library Compiler (TM)
+                                 DesignWare (R)
+
+             Version T-2022.03-SP3 for linux64 - Jul 13, 2022 -SLE
+
+                    Copyright (c) 1988 - 2022 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+   or distribution of this software is strictly prohibited.  Licensed Products
+     communicate with Synopsys servers for the purpose of providing software
+    updates, detecting software piracy and verifying that customers are using
+    Licensed Products in conformity with the applicable License Key for such
+  Licensed Products. Synopsys will use information gathered in connection with
+    this process to deliver software updates and pursue software pirates and
+                                   infringers.
+
+ Inclusivity & Diversity - Visit SolvNetPlus to read the "Synopsys Statement on
+            Inclusivity and Diversity" (Refer to article 000036315 at
+                        https://solvnetplus.synopsys.com)
+ 
+Initializing...
+read_lib /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/char_results/lib_ccs/SRAM_128_12_min_1d16_m40_ccs.lib > SRAM_128_12_min_1d16_m40_ccs.lib.log 
+write_lib SRAM_128_12_min_1d16_m40_ccs -format db  -output /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_min_1d16_m40_ccs.db 
+Wrote the 'SRAM_128_12_min_1d16_m40_ccs' library to '/home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_min_1d16_m40_ccs.db' successfully
+1
+exit
+Maximum memory usage for this session: 106.95 MB
+CPU usage for this session:      1 seconds (  0.00 hours)
+Elapsed time for this session:      9 seconds (  0.00 hours)
+Thank you for using Library Compiler.
+
+Thank you...
+
+                             Library Compiler (TM)
+                                 DesignWare (R)
+
+             Version T-2022.03-SP3 for linux64 - Jul 13, 2022 -SLE
+
+                    Copyright (c) 1988 - 2022 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+   or distribution of this software is strictly prohibited.  Licensed Products
+     communicate with Synopsys servers for the purpose of providing software
+    updates, detecting software piracy and verifying that customers are using
+    Licensed Products in conformity with the applicable License Key for such
+  Licensed Products. Synopsys will use information gathered in connection with
+    this process to deliver software updates and pursue software pirates and
+                                   infringers.
+
+ Inclusivity & Diversity - Visit SolvNetPlus to read the "Synopsys Statement on
+            Inclusivity and Diversity" (Refer to article 000036315 at
+                        https://solvnetplus.synopsys.com)
+ 
+Initializing...
+read_lib /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/char_results/lib_ccs/SRAM_128_12_max_0d95_25_ccs.lib > SRAM_128_12_max_0d95_25_ccs.lib.log 
+write_lib SRAM_128_12_max_0d95_25_ccs -format db  -output /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_max_0d95_25_ccs.db 
+Wrote the 'SRAM_128_12_max_0d95_25_ccs' library to '/home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_max_0d95_25_ccs.db' successfully
+1
+exit
+Maximum memory usage for this session: 106.95 MB
+CPU usage for this session:      1 seconds (  0.00 hours)
+Elapsed time for this session:      9 seconds (  0.00 hours)
+Thank you for using Library Compiler.
+
+Thank you...
+
+                             Library Compiler (TM)
+                                 DesignWare (R)
+
+             Version T-2022.03-SP3 for linux64 - Jul 13, 2022 -SLE
+
+                    Copyright (c) 1988 - 2022 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+   or distribution of this software is strictly prohibited.  Licensed Products
+     communicate with Synopsys servers for the purpose of providing software
+    updates, detecting software piracy and verifying that customers are using
+    Licensed Products in conformity with the applicable License Key for such
+  Licensed Products. Synopsys will use information gathered in connection with
+    this process to deliver software updates and pursue software pirates and
+                                   infringers.
+
+ Inclusivity & Diversity - Visit SolvNetPlus to read the "Synopsys Statement on
+            Inclusivity and Diversity" (Refer to article 000036315 at
+                        https://solvnetplus.synopsys.com)
+ 
+Initializing...
+read_lib /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/char_results/lib_ccs/SRAM_128_12_min_1d16_25_ccs.lib > SRAM_128_12_min_1d16_25_ccs.lib.log 
+write_lib SRAM_128_12_min_1d16_25_ccs -format db  -output /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_min_1d16_25_ccs.db 
+Wrote the 'SRAM_128_12_min_1d16_25_ccs' library to '/home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_min_1d16_25_ccs.db' successfully
+1
+exit
+Maximum memory usage for this session: 106.95 MB
+CPU usage for this session:      1 seconds (  0.00 hours)
+Elapsed time for this session:      9 seconds (  0.00 hours)
+Thank you for using Library Compiler.
+
+Thank you...
+
+                             Library Compiler (TM)
+                                 DesignWare (R)
+
+             Version T-2022.03-SP3 for linux64 - Jul 13, 2022 -SLE
+
+                    Copyright (c) 1988 - 2022 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+   or distribution of this software is strictly prohibited.  Licensed Products
+     communicate with Synopsys servers for the purpose of providing software
+    updates, detecting software piracy and verifying that customers are using
+    Licensed Products in conformity with the applicable License Key for such
+  Licensed Products. Synopsys will use information gathered in connection with
+    this process to deliver software updates and pursue software pirates and
+                                   infringers.
+
+ Inclusivity & Diversity - Visit SolvNetPlus to read the "Synopsys Statement on
+            Inclusivity and Diversity" (Refer to article 000036315 at
+                        https://solvnetplus.synopsys.com)
+ 
+Initializing...
+read_lib /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/char_results/lib_ccs/SRAM_128_12_min_1d16_125_ccs.lib > SRAM_128_12_min_1d16_125_ccs.lib.log 
+write_lib SRAM_128_12_min_1d16_125_ccs -format db  -output /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_min_1d16_125_ccs.db 
+Wrote the 'SRAM_128_12_min_1d16_125_ccs' library to '/home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_min_1d16_125_ccs.db' successfully
+1
+exit
+Maximum memory usage for this session: 106.95 MB
+CPU usage for this session:      1 seconds (  0.00 hours)
+Elapsed time for this session:      9 seconds (  0.00 hours)
+Thank you for using Library Compiler.
+
+Thank you...
+
+                             Library Compiler (TM)
+                                 DesignWare (R)
+
+             Version T-2022.03-SP3 for linux64 - Jul 13, 2022 -SLE
+
+                    Copyright (c) 1988 - 2022 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+   or distribution of this software is strictly prohibited.  Licensed Products
+     communicate with Synopsys servers for the purpose of providing software
+    updates, detecting software piracy and verifying that customers are using
+    Licensed Products in conformity with the applicable License Key for such
+  Licensed Products. Synopsys will use information gathered in connection with
+    this process to deliver software updates and pursue software pirates and
+                                   infringers.
+
+ Inclusivity & Diversity - Visit SolvNetPlus to read the "Synopsys Statement on
+            Inclusivity and Diversity" (Refer to article 000036315 at
+                        https://solvnetplus.synopsys.com)
+ 
+Initializing...
+read_lib /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/char_results/lib_ccs/SRAM_128_12_max_0d95_125_ccs.lib > SRAM_128_12_max_0d95_125_ccs.lib.log 
+write_lib SRAM_128_12_max_0d95_125_ccs -format db  -output /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_max_0d95_125_ccs.db 
+Wrote the 'SRAM_128_12_max_0d95_125_ccs' library to '/home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_max_0d95_125_ccs.db' successfully
+1
+exit
+Maximum memory usage for this session: 106.95 MB
+CPU usage for this session:      1 seconds (  0.00 hours)
+Elapsed time for this session:      9 seconds (  0.00 hours)
+Thank you for using Library Compiler.
+
+Thank you...
+
+                             Library Compiler (TM)
+                                 DesignWare (R)
+
+             Version T-2022.03-SP3 for linux64 - Jul 13, 2022 -SLE
+
+                    Copyright (c) 1988 - 2022 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+   or distribution of this software is strictly prohibited.  Licensed Products
+     communicate with Synopsys servers for the purpose of providing software
+    updates, detecting software piracy and verifying that customers are using
+    Licensed Products in conformity with the applicable License Key for such
+  Licensed Products. Synopsys will use information gathered in connection with
+    this process to deliver software updates and pursue software pirates and
+                                   infringers.
+
+ Inclusivity & Diversity - Visit SolvNetPlus to read the "Synopsys Statement on
+            Inclusivity and Diversity" (Refer to article 000036315 at
+                        https://solvnetplus.synopsys.com)
+ 
+Initializing...
+read_lib /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/char_results/lib_ccs/SRAM_128_12_typ_1d05_25_ccs.lib > SRAM_128_12_typ_1d05_25_ccs.lib.log 
+write_lib SRAM_128_12_typ_1d05_25_ccs -format db  -output /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_typ_1d05_25_ccs.db 
+Wrote the 'SRAM_128_12_typ_1d05_25_ccs' library to '/home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_typ_1d05_25_ccs.db' successfully
+1
+exit
+Maximum memory usage for this session: 106.95 MB
+CPU usage for this session:      1 seconds (  0.00 hours)
+Elapsed time for this session:      9 seconds (  0.00 hours)
+Thank you for using Library Compiler.
+
+Thank you...
+
+                             Library Compiler (TM)
+                                 DesignWare (R)
+
+             Version T-2022.03-SP3 for linux64 - Jul 13, 2022 -SLE
+
+                    Copyright (c) 1988 - 2022 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+   or distribution of this software is strictly prohibited.  Licensed Products
+     communicate with Synopsys servers for the purpose of providing software
+    updates, detecting software piracy and verifying that customers are using
+    Licensed Products in conformity with the applicable License Key for such
+  Licensed Products. Synopsys will use information gathered in connection with
+    this process to deliver software updates and pursue software pirates and
+                                   infringers.
+
+ Inclusivity & Diversity - Visit SolvNetPlus to read the "Synopsys Statement on
+            Inclusivity and Diversity" (Refer to article 000036315 at
+                        https://solvnetplus.synopsys.com)
+ 
+Initializing...
+read_lib /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/char_results/lib_ccs/SRAM_128_12_typ_1d05_m40_ccs.lib > SRAM_128_12_typ_1d05_m40_ccs.lib.log 
+write_lib SRAM_128_12_typ_1d05_m40_ccs -format db  -output /home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_typ_1d05_m40_ccs.db 
+Wrote the 'SRAM_128_12_typ_1d05_m40_ccs' library to '/home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/memory/mc_work/SRAM_128_12_typ_1d05_m40_ccs.db' successfully
+1
+exit
+Maximum memory usage for this session: 106.96 MB
+CPU usage for this session:      1 seconds (  0.00 hours)
+Elapsed time for this session:      9 seconds (  0.00 hours)
+Thank you for using Library Compiler.
+
+Thank you...

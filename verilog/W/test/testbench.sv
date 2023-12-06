@@ -1,5 +1,3 @@
-`timescale 1ns/1ps
-
 module testbench;
     localparam N        = 32;
     localparam K        = 32;

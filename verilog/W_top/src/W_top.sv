@@ -1,4 +1,4 @@
-module W_top(parameter W_W = 8, R_W = 6, N = 1008, OUT_W = 32, R_OUT = 28, LV0 = 0, LV1 = 1, LV2 = 2, LV3 = 3, LV4 = 4, LV5 = 5, LV6 = 6, LV7 = 7)
+module W_top #(parameter W_W = 8, R_W = 6, N = 1008, OUT_W = 32, R_OUT = 28, LV0 = 0, LV1 = 1, LV2 = 2, LV3 = 3, LV4 = 4, LV5 = 5, LV6 = 6, LV7 = 7)
 (
     input                           clock,
     input                           reset,
@@ -40,7 +40,7 @@ module W_top(parameter W_W = 8, R_W = 6, N = 1008, OUT_W = 32, R_OUT = 28, LV0 =
         begin
             for (int i = 0; i < N; i = i + 1)
             begin
-                wo[i]           <= '0;
+                w0[i]           <= '0;
                 prod[i]         <= '0;
                 shift_reg[i]    <= '0;
             end

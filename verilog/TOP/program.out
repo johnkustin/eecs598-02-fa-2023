@@ -1,0 +1,21 @@
+Chronologic VCS simulator copyright 1991-2020
+Contains Synopsys proprietary information.
+Compiler version R-2020.12-SP2-1_Full64; Runtime version R-2020.12-SP2-1_Full64;  Dec  6 04:12 2023
+
+Warning-[STASKW_CO1] Cannot open file
+  The file 'data/dp.mem' could not be opened. No such file or directory.
+  Please ensure that the file exists with proper permissions.
+
+
+Warning-[STASKW_RMCOF] Cannot open file
+test/testbench.sv, 59
+  Cannot open file 'data/dp.mem' passed as argument to $readmem.
+  Please verify that the first argument to $readmem is a file that exists with
+  proper permissions.
+
+$finish called from file "test/testbench.sv", line 89.
+$finish at simulation time               833320
+           V C S   S i m u l a t i o n   R e p o r t 
+Time: 833320
+CPU Time:      7.040 seconds;       Data structure size:   0.1Mb
+Wed Dec  6 04:13:00 2023
