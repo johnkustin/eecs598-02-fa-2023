@@ -6,6 +6,8 @@ module W # (parameter N = 32, IN_W = 32, OUT_W = 32, COEFF_W = 32, R_IN = 31, R_
     input wire                          weight_load_en,
     input logic signed  [IN_W-1:0]      data_in,
     input logic signed  [COEFF_W-1:0]   weight_in [N],
+    input logic [$clog2(N)-1:0]         output_idx,
+    output logic signed [COEFF_W-1:0]   output_coeff,
     output logic signed [OUT_W-1:0]     data_out,
     output logic                        valid_out
 );  
@@ -32,6 +34,8 @@ module W # (parameter N = 32, IN_W = 32, OUT_W = 32, COEFF_W = 32, R_IN = 31, R_
     logic signed [IN_W*2:0]     sum_n;
 
     logic signed [OUT_W-1:0]    final_sum_n;
+    
+    assign output_coeff = w[output_idx];
 
     always_comb
     begin

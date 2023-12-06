@@ -6,12 +6,13 @@ module mod2 #(
     parameter OUT_W = 3, // 1 for sign (bipolar quantizer), 2 for a 4 level (bipolar) quantizer
     parameter YY_FS = 16384 // fp_quantizer(QNS_level_matlab, IN_N, IN_R) this FS value is the Levels var for the QNS in matlab. It must be quantized to match 
     ) ( 
-    input clk,
-    input rstn,
-    input wire en,
+    input clock,
+    input reset,
+    input wire valid_in,
     input signed [IN_W-1:0] in, // (N,R) = s(19,15) signed
     output wire signed [OUT_W-1:0] out, // output  signed,
-    output wire signed [IN_W-1:0] out_scaled
+    output wire signed [IN_W-1:0] out_scaled,
+    output wire valid_out
 
 );
 
@@ -19,6 +20,7 @@ reg signed [IN_W-1:0] inp, v_scaled; // x
 reg signed [IN_W:0] yy; // yy
 reg signed [IN_W:0] e, reg1, reg2; // e
 reg signed [OUT_W-1:0] v; // yy
+reg valid_internal;
 
 localparam V_SCALING = (IN_W - OUT_W - 1 - 1); // see comments below
 always @(*) begin // 2 bit, bipolar quantizer
@@ -37,6 +39,7 @@ end
 
 assign out = v;
 assign out_scaled = v_scaled;
+assign valid_out = valid_internal;
 
 // floating pt lvl -> quantizer integer level
 // 1.5 -> 3  
@@ -53,11 +56,12 @@ assign out_scaled = v_scaled;
 // fp_quantizer(1.5, 19, 15) == 3 * 2^14 = 49152 
 // fp_quantizer(0.5, 19, 15) == 1 * 2^14 = 16384 
 
-always @(posedge clk or negedge rstn) begin
-        if (rstn == 0) begin
-            reg2 <= 0; reg1<= 0; inp <= 0;
+always @(posedge clock) begin
+        if (reset) begin
+            reg2 <= 0; reg1<= 0; inp <= 0; valid_internal <= 0;
         end
         else begin
+            valid_internal <= valid_in;
             inp <= in;
             reg2 <= reg1; 
             reg1 <= -e;

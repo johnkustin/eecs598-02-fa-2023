@@ -26,8 +26,8 @@ all:	simv
 #####
 
 TESTBENCH = test/testbench.sv
-SIMFILES = src/fir_filter.sv
-SYNFILES = results/fir_filter.mapped.v
+SIMFILES = src/W.sv
+SYNFILES = results/W.mapped.v
 SYN_SIM_OPTS = +neg_tchk 
 
 
