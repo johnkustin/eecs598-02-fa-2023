@@ -114,8 +114,8 @@ module top
     // PRIMARY PATH
     mod2 #( 
             .IN_W   (`UP_W), 
-            .OUT_W  (`QNS_OUT_W),
-            .YY_FS  (`QNS_LEVEL_1)
+            .OUT_W  (`QNS_OUT_W)
+            // .YY_FS  (`QNS_LEVEL_1)
     ) qns1
     (   
         .clock      (clock),
@@ -178,8 +178,8 @@ module top
 
     mod2 #( 
             .IN_W   (`YP_W), 
-            .OUT_W  (`QNS_OUT_W),
-            .YY_FS  (`QNS_LEVEL_3)
+            .OUT_W  (`QNS_OUT_W)
+            // .YY_FS  (`QNS_LEVEL_3)
     ) qns3
     (   
         .clock      (clock),
@@ -300,8 +300,8 @@ module top
 
     mod2 #( 
             .IN_W   (`EP_W), 
-            .OUT_W  (`QNS_OUT_W),
-            .YY_FS  (`QNS_LEVEL_4)
+            .OUT_W  (`QNS_OUT_W)
+            // .YY_FS  (`QNS_LEVEL_4)
     ) qns4
     (   
         .clock      (clock),
@@ -433,8 +433,8 @@ module top
 
     mod2 #( 
             .IN_W   (`W_COEFF_W), 
-            .OUT_W  (`QNS_OUT_W),
-            .YY_FS  (`QNS_LEVEL_2)
+            .OUT_W  (`QNS_OUT_W)
+            // .YY_FS  (`QNS_LEVEL_2)
     ) qns2
     (   
         .clock      (clock),

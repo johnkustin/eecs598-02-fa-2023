@@ -42,6 +42,10 @@ module testbench;
     logic done_bootup;
     integer y0_out_file;
     integer ep_out_file;
+    integer qns1_out_file;
+    integer qns2_out_file;
+    integer qns3_out_file;
+    integer qns4_out_file;
 
     top t0 
     (
@@ -157,6 +161,11 @@ module testbench;
                 if (y0_num == NUM_Y0-10) // todo change this to max val and make sense of it
                 begin
                     $fclose(y0_out_file);
+                    $fclose(ep_out_file);
+                    $fclose(qns1_out_file);
+                    $fclose(qns2_out_file);
+                    $fclose(qns3_out_file);
+                    $fclose(qns4_out_file);
                     $finish;
                 end
             end
@@ -168,10 +177,29 @@ module testbench;
         end
     end
 
+    always @(posedge clock)
+    begin
+        if (t0.qns1.valid_out)
+            $fdisplay(qns1_out_file, "%d %d", t0.qns1_to_lpd1_data, t0.qns1.e);
+        if (t0.qns2.valid_out)
+            $fdisplay(qns2_out_file, "%d %d", t0.qns2_out_data, t0.qns2.e);
+        if (t0.qns3.valid_out)
+            $fdisplay(qns3_out_file, "%d %d", t0.qns3_data_out, t0.qns3.e);
+        if (t0.qns4.valid_out)
+            $fdisplay(qns4_out_file, "%d %d", t0.qns4_data_out, t0.qns4.e);
+    end        
+        
+
     initial
     begin
         y0_out_file = $fopen("../../python/TOP/data/y0_hw_raw.txt");
         ep_out_file = $fopen("../../python/TOP/data/ep_hw_raw.txt");
+        
+        qns1_out_file = $fopen("data/qns1.txt", "w");
+        qns2_out_file = $fopen("data/qns2.txt", "w");
+        qns3_out_file = $fopen("data/qns3.txt", "w");
+        qns4_out_file = $fopen("data/qns4.txt", "w");
+
         clock = 0;
         reset = 1;
         @(negedge clock);
