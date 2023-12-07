@@ -78,10 +78,10 @@ module testbench;
     always_comb
     begin
         ep_data_c = dp_data_MEM[up_num - LATENCY] >>> DP_TO_EP_SHIFT;
-        ep_data_c = ep_data_c + (sp_data_MEM[0] * y0_data_out) >>> SP_TO_EP_SHIFT;
+        ep_data_c = ep_data_c + ((sp_data_MEM[0] * y0_data_out) >>> SP_TO_EP_SHIFT);
         for (int i = 1; i < NUM_SP; i = i + 1)
         begin
-            ep_data_c = ep_data_c + (sp_data_MEM[i] * y0_data_VEC[y0_num - i]) >>> SP_TO_EP_SHIFT;
+            ep_data_c = ep_data_c + ((sp_data_MEM[i] * y0_data_VEC[y0_num - i]) >>> SP_TO_EP_SHIFT);
         end
     end
 
