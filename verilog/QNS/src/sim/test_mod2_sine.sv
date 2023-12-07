@@ -4,9 +4,8 @@
 
 module test_mod2_sine;
 
-// string dataPath = "./";
+string dataPath = "../../sim/";
 string fileName = "sine_n19r15_fin_1k_0p5VFS_OSR_32_fs_44p1k_96000_pts.txt";
-
 
 parameter IN_W = 19;
 parameter OUT_W = 3;
@@ -29,19 +28,19 @@ integer f;
 initial begin
     $dumpfile("test_mod2_sine.vcd");
     $dumpvars(0);
-    $readmemh(fileName, inArr);     
+    $readmemh({dataPath,fileName}, inArr);     
     $sdf_annotate("../results/mod2.mapped.sdf", mod);
 end
 
 mod2 #(
     .IN_W(IN_W),
-    .OUT_W(OUT_W),
-    .YY_FS(16384)
+    .OUT_W(OUT_W)
+    // .YY_FS(16384)
     ) 
     mod(
-    .clk(clk),
-    .rstn(rstn),
-    .en(en),
+    .clock(clk),
+    .reset(~rstn),
+    // .en(en),
     .in(in), 
     .out(out),
     .out_scaled(out_scaled)

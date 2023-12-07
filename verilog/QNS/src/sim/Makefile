@@ -24,8 +24,8 @@ all:	simv
 
 TESTBENCH = test_mod2_sine.sv 
 #test_mod2_noise.sv
-SIMFILES = ../src/mod2.v ./H_cic_dec_64_N3R0_signed.v
-SYNFILES = ../results/mod2.mapped.v ./H_cic_dec_64_N3R0_signed.v
+SIMFILES = ../mod2.v ./H_cic_dec_64_N3R0_signed.v
+SYNFILES = ../../results/mod2.mapped.v ./H_cic_dec_64_N3R0_signed.v
 
 SYN_SIM_OPTS = +compsdf +neg_tchk 
 

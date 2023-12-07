@@ -182,3 +182,23 @@ xlabel('sample number')
 ylabel('normalized amplitude')
 legend('output', 'input')
 savefig("verilog_matlab_mod2_comparison")
+
+if doSineInput
+    figure(654); clf;
+    F = (0:(N-1))/N * fs * OSR;
+
+    windo = hann(length(verilogModulatorOut));
+    nb = 3;
+    w1 = norm(windo,1);
+    w2 = norm(windo,2);
+    window_amp_correct = w1/2;
+
+    OUT = abs(fft(windo.*verilogModulatorOut./window_amp_correct));
+    OUT = [OUT(1); OUT(2:floor(N/2)) * 2];
+    OUT = OUT ./ max(OUT);
+    semilogx(F(1:floor(N/2)), 20*log10(OUT))
+    xlabel('Frequency (Hz)')
+    ylabel('Magnitude (dBFS)')
+    title(sprintf("%d pt FFT. Hanning Window", N))
+    grid on
+end

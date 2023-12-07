@@ -3,8 +3,8 @@
 
 module mod2 #(
     parameter IN_W = 19, // s(19, 15) signed
-    parameter OUT_W = 3, // 1 for sign (bipolar quantizer), 2 for a 4 level (bipolar) quantizer
-    parameter YY_FS = 16384 // fp_quantizer(QNS_level_matlab, IN_N, IN_R) this FS value is the Levels var for the QNS in matlab. It must be quantized to match 
+    parameter OUT_W = 3 // 1 for sign (bipolar quantizer), 2 for a 4 level (bipolar) quantizer
+    // parameter YY_FS = 16384 // fp_quantizer(QNS_level_matlab, IN_N, IN_R) this FS value is the Levels var for the QNS in matlab. It must be quantized to match 
     ) ( 
     input clock,
     input reset,
@@ -23,6 +23,7 @@ reg signed [OUT_W-1:0] v; // yy
 reg valid_internal;
 
 localparam V_SCALING = (IN_W - OUT_W - 1 - 1); // see comments below
+localparam signed YY_FS = 1 <<< V_SCALING;
 always @(*) begin // 2 bit, bipolar quantizer
         yy = inp - (reg1 <<< 1) + reg2; 
         if (yy >= 0) begin
