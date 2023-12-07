@@ -64,7 +64,7 @@
 `define R_LMS_LUT_OUT 5
 `define LMS_LUT_IN_W 8
 `define R_LMS_LUT_IN 4
-`define MU 858993459
+`define MU 429496729
 `define OFFSET 21474836
 
 // LPD1

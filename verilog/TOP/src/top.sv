@@ -74,6 +74,7 @@ module top
     // LPD2 -> LMS
     logic signed [`DH_W-1:0] lpd2_data_out;
     logic                    lpd2_valid_out;
+    logic                    lpd2_valid_out_1_cycle_delay;
 
 
     // EHat(n) -> LMS
@@ -91,6 +92,7 @@ module top
     logic [$clog2(`W0_N)-1:0]       qns2_to_w0_idx;
     logic [$clog2(`W_N)-1:0]        w1_output_idx;
     logic signed [`W_COEFF_W-1:0]   w1_output_coeff;
+
 
 
     // INSTANTIATIONS
@@ -362,13 +364,15 @@ module top
     begin
         if (reset)
         begin
-            ehat_valid <=   1'b0;
-            ehat_data   <= '0;
+            ehat_valid                      <=   1'b0;
+            ehat_data                       <= '0;
+            lpd2_valid_out_1_cycle_delay    <= 1'b0;
         end
         else
         begin
-            ehat_valid  <= shat2_valid_out && w2_valid_out && lpd2_valid_out;
-            ehat_data   <= (lpd2_data_out + shat2_data_out) - w2_data_out;
+            lpd2_valid_out_1_cycle_delay    <= lpd2_valid_out;
+            ehat_valid                      <= shat2_valid_out && w2_valid_out && lpd2_valid_out_1_cycle_delay;
+            ehat_data                       <= (lpd2_data_out + shat2_data_out) - w2_data_out;
         end
     end
 

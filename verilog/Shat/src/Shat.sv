@@ -8,7 +8,7 @@ module Shat # (parameter N = 32, IN_W = 32, OUT_W = 32, SH_W = 32, R_IN = 31, R_
     output logic                    valid_out
 );  
 
-    parameter logic signed [SH_W-1:0] sh [0:N-1] = {32'hffec56d6, 32'hff645a1d, 32'h226809d, 32'hef295e9e,
+    parameter logic signed [SH_W-1:0] sh [N] = {32'hffec56d6, 32'hff645a1d, 32'h226809d, 32'hef295e9e,
                                                     32'he52a3055, 32'hbb439581, 32'hfeb851ec, 32'h351eb852,
                                                     32'hd35a86, 32'h10b0f28, 32'hff089a02, 32'hbac711, 
                                                     32'hff80346e, 32'h4816f0, 32'hffe76c8b, 32'hfff14120,

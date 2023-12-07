@@ -83,10 +83,10 @@ q = zeros(L*K, NQNS);
 
 for n0=Li*K:L*K
     % discrete
-    u0(n0) = step(QNSx{1}, up(n0), quantizerType);
+    u0(n0) = step(QNSx{1}, up(n0), quantizerType); // 1 cycle
     
-    yq(n0) = - w0'*u0(n0:-1:n0-NW0+1);
-    y0(n0) = step(QNSx{3}, yq(n0), quantizerType);
+    yq(n0) = - w0'*u0(n0:-1:n0-NW0+1); // 3 cycles of latency
+    y0(n0) = step(QNSx{3}, yq(n0), quantizerType); // 1 cycle
 
     % physical
     yp(n0) = wop'*up(n0:-1:n0-NW*K+1);
@@ -94,7 +94,7 @@ for n0=Li*K:L*K
     ep(n0) = dp(n0) + sp'*y0(n0:-1:n0-NW*K+1);
     
     % discrete
-    e0(n0) = step(QNSx{4}, ep(n0), quantizerType);
+    e0(n0) = step(QNSx{4}, ep(n0-5), quantizerType);
     
     if mod(n0, K)==0
         n = n0/K;
