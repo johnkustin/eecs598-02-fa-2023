@@ -20,6 +20,7 @@ module W_top #(parameter W_W = 8, R_W = 6, N = 1008, OUT_W = 32, R_OUT = 28, LV0
     localparam logic signed [W_W-1:0] LUT [LUT_SIZE] = {LV0, LV1, LV2, LV3, LV4, LV5, LV6, LV7};
 
     logic [1:0] w0 [N];
+    logic       w0_valid [N]; // TODO: make this a struct
     logic [1:0] shift_reg [N];
     logic signed [OUT_W + ($clog2(N))-1:0] data_out_int;
     logic signed [OUT_W-1:0] prod [N];
@@ -41,6 +42,7 @@ module W_top #(parameter W_W = 8, R_W = 6, N = 1008, OUT_W = 32, R_OUT = 28, LV0
             for (int i = 0; i < N; i = i + 1)
             begin
                 w0[i]           <= '0;
+                w0_valid[i]     <= 1'b0;
                 prod[i]         <= '0;
                 shift_reg[i]    <= '0;
             end
@@ -52,7 +54,8 @@ module W_top #(parameter W_W = 8, R_W = 6, N = 1008, OUT_W = 32, R_OUT = 28, LV0
         begin
             if (valid_update_in)
             begin
-                w0[update_idx] <= update_data;
+                w0_valid[update_idx]    <= 1'b1;
+                w0[update_idx]          <= update_data;
             end
 
             if (valid_data_in)
@@ -71,7 +74,7 @@ module W_top #(parameter W_W = 8, R_W = 6, N = 1008, OUT_W = 32, R_OUT = 28, LV0
 
             for (int i = 0; i < N; i = i + 1)
             begin
-                prod[i] <= (LUT[{(shift_reg[i][0] ^ w0[i][0]), shift_reg[i][1], w0[i][1]}]) <<< SHIFT_VAL;
+                prod[i] <= w0_valid[i] ? (LUT[{(shift_reg[i][0] ^ w0[i][0]), shift_reg[i][1], w0[i][1]}]) <<< SHIFT_VAL : '0;
             end
 
             if (data_out_int > OUT_MAX)
