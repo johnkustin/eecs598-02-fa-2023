@@ -1,0 +1,43 @@
+                         Chronologic VCS (TM)
+      Version R-2020.12-SP2-1_Full64 -- Thu Dec  7 21:26:03 2023
+
+                    Copyright (c) 1991 - 2021 Synopsys, Inc.
+   This software and the associated documentation are proprietary to Synopsys,
+ Inc. This software may only be used in accordance with the terms and conditions
+ of a written license agreement with Synopsys, Inc. All other use, reproduction,
+            or distribution of this software is strictly prohibited.
+
+Parsing design file 'test/testbench.sv'
+Parsing design file 'src/LMS.sv'
+Parsing design file 'memory/verilog/SRAM_128_12.v'
+Top Level Modules:
+       testbench
+TimeScale is 1 ns / 1 ps
+
+   ***   $sdf_annotate() version 1.2R
+
+Warning-[SDFCOM_CNOF] Cannot Open File
+  SDF Error: Cannot open SDF file results/LMS.mapped.sdf for reading.      
+  No such file or directory.
+
+
+          Total errors: 1
+          Total warnings: 0
+   ***    SDF annotation aborted: Thu Dec  7 21:26:04 2023
+
+
+Starting vcs inline pass...
+3 modules and 0 UDP read.
+recompiling module testbench
+recompiling module LMS
+Both modules done.
+	However, due to incremental compilation, only 2 modules need to be compiled. 
+make[1]: Entering directory '/home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/csrc'
+rm -f _cuarc*.so _csrc*.so pre_vcsobj_*.so share_vcsobj_*.so
+ld -shared  -Bsymbolic --no-relax  -o .//../simv.daidir//_cuarc0.so objs/amcQw_d.o 
+rm -f _cuarc0.so
+if [ -x ../simv ]; then chmod a-x ../simv; fi
+g++  -o ../simv      -rdynamic  -Wl,-rpath='$ORIGIN'/simv.daidir -Wl,-rpath=./simv.daidir -Wl,-rpath=/usr/caen/vcs-2020.12-SP2-1/linux64/lib -L/usr/caen/vcs-2020.12-SP2-1/linux64/lib  -Wl,-rpath-link=./  /usr/lib64/libnuma.so.1     _1034735_archive_1.so _prev_archive_1.so _cuarc0.so  SIM_l.o      rmapats_mop.o rmapats.o rmar.o rmar_nd.o  rmar_llvm_0_1.o rmar_llvm_0_0.o           -lvirsim -lerrorinf -lsnpsmalloc -lvfs    -lvcsnew -lsimprofile -luclinative /usr/caen/vcs-2020.12-SP2-1/linux64/lib/vcs_tls.o   -Wl,-whole-archive  -lvcsucli    -Wl,-no-whole-archive          /usr/caen/vcs-2020.12-SP2-1/linux64/lib/vcs_save_restore_new.o -ldl  -lc -lm -lpthread -ldl 
+../simv up to date
+make[1]: Leaving directory '/home/rsomvan/VSLI_598/eecs598-02-fa-2023/verilog/LMS/csrc'
+CPU time: .458 seconds to compile + .251 seconds to elab + .580 seconds to link

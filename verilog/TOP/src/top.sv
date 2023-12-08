@@ -74,7 +74,7 @@ module top
     // LPD2 -> LMS
     logic signed [`DH_W-1:0] lpd2_data_out;
     logic                    lpd2_valid_out;
-    logic                    lpd2_valid_out_1_cycle_delay;
+    logic [1:0]              lpd2_valid_out_delay;
 
 
     // EHat(n) -> LMS
@@ -86,13 +86,12 @@ module top
     logic                           lms_to_w_valid;
 
     // W1 -> QNS2 -> W0
-    logic signed [`QNS_OUT_W-1:0]   qns2_out_data;
+    logic signed [7:0]   qns2_out_data;
     logic [1:0]                     qns2_to_w0_data;
     logic                           qns2_to_w0_valid;
     logic [$clog2(`W0_N)-1:0]       qns2_to_w0_idx;
     logic [$clog2(`W_N)-1:0]        w1_output_idx;
     logic signed [`W_COEFF_W-1:0]   w1_output_coeff;
-
 
 
     // INSTANTIATIONS
@@ -104,6 +103,10 @@ module top
         end
         else
         begin
+            if (lpd2_valid_out)
+            begin
+                $display("%d", lpd2_data_out);
+            end
             if (up_valid_in)
             begin
                 bootup_done <= 1'b1;
@@ -112,18 +115,19 @@ module top
     end
 
     // PRIMARY PATH
-    mod2 #( 
+    qns #( 
             .IN_W   (`UP_W), 
+            .R_IN   (`R_UP),
             .OUT_W  (`QNS_OUT_W),
-            .YY_FS  (`QNS_LEVEL_1)
+            .R_OUT  (0),
+            .LEVEL  (2) // in r_out
     ) qns1
     (   
         .clock      (clock),
         .reset      (reset),
         .valid_in   (up_valid_in),
-        .in         (up_data_in),
-        .out        (qns1_to_lpd1_data),
-        .out_scaled (),
+        .x_in         (up_data_in),
+        .y_out        (qns1_to_lpd1_data),
         .valid_out  (qns1_to_lpd1_valid)
     );
 
@@ -154,7 +158,7 @@ module top
             .R_W    (`R_W0_COEFF),
             .N      (`W0_N),
             .OUT_W  (`YP_W),
-            .R_OUT  (`R_YP),
+            .R_OUT  (`R_W0_COEFF),
             .LV0    (`W0_LUT_0_VAL),
             .LV1    (`W0_LUT_1_VAL),
             .LV2    (`W0_LUT_2_VAL),
@@ -176,22 +180,21 @@ module top
         .data_out           (w0_to_qns3_data)
     );
 
-    mod2 #( 
+    qns #( 
             .IN_W   (`YP_W), 
-            .OUT_W  (`QNS_OUT_W),
-            .YY_FS  (`QNS_LEVEL_3)
+            .R_IN   (`R_W0_COEFF),
+            .OUT_W  (4),
+            .R_OUT  (0),
+            .LEVEL  (4) // in r_out
     ) qns3
     (   
         .clock      (clock),
         .reset      (reset),
         .valid_in   (w0_to_qns3_valid),
-        .in         (-w0_to_qns3_data),
-        .out        (qns3_data_out),
-        .out_scaled (),
+        .x_in         (w0_to_qns3_data),
+        .y_out        (y0_data_out),
         .valid_out  (y0_valid_out)
     );
-
-    assign y0_data_out = qns3_data_out <<< 1; // multiply by 2
 
     // SECONDARY PATH
     LPD #(
@@ -298,50 +301,21 @@ module top
         .valid_out  (shat2_valid_out)
     );
 
-    mod2 #( 
+    qns #( 
             .IN_W   (`EP_W), 
-            .OUT_W  (`QNS_OUT_W),
-            .YY_FS  (`QNS_LEVEL_4)
+            .R_IN   (`R_EP),
+            .OUT_W  (`E0_W),
+            .R_OUT  (0),
+            .LEVEL  (10) // in r_out
     ) qns4
     (   
         .clock      (clock),
         .reset      (reset),
         .valid_in   (ep_valid_in),
-        .in         (ep_data_in),
-        .out        (qns4_data_out),
-        .out_scaled (),
-        .valid_out  (qns4_valid_out)
+        .x_in         (ep_data_in),
+        .y_out        (qns4_to_lpd2_data),
+        .valid_out  (qns4_to_lpd2_valid)
     );
-    
-    // qns4 -> LPD2 passthrough
-    always @(posedge clock)
-    begin
-        if (reset)
-        begin
-            qns4_to_lpd2_data <= '0;
-            qns4_to_lpd2_valid <= 1'b0;
-        end
-        else
-        begin
-            qns4_to_lpd2_valid <= qns4_valid_out;
-            if (qns4_data_out == -3)
-            begin
-                qns4_to_lpd2_data <= -(`QNS4_FINAL_OUT_3);
-            end
-            else if (qns4_data_out == -1)
-            begin
-                qns4_to_lpd2_data <= -(`QNS4_FINAL_OUT_1);
-            end
-            else if (qns4_data_out == 1)
-            begin
-                qns4_to_lpd2_data <= `QNS4_FINAL_OUT_1;
-            end
-            else
-            begin
-                qns4_to_lpd2_data <= `QNS4_FINAL_OUT_3;
-            end
-        end
-    end
 
     LPD #(
         .IN_W   (`E0_W),
@@ -366,12 +340,13 @@ module top
         begin
             ehat_valid                      <=   1'b0;
             ehat_data                       <= '0;
-            lpd2_valid_out_1_cycle_delay    <= 1'b0;
+            lpd2_valid_out_delay            <= 2'b0;
         end
         else
         begin
-            lpd2_valid_out_1_cycle_delay    <= lpd2_valid_out;
-            ehat_valid                      <= shat2_valid_out && w2_valid_out && lpd2_valid_out_1_cycle_delay;
+            lpd2_valid_out_delay[0]         <= lpd2_valid_out;
+            lpd2_valid_out_delay[1]         <= lpd2_valid_out_delay[0];
+            ehat_valid                      <= shat2_valid_out && w2_valid_out && lpd2_valid_out_delay[1];
             ehat_data                       <= (lpd2_data_out + shat2_data_out) - w2_data_out;
         end
     end
@@ -429,34 +404,35 @@ module top
         end
     end
 
-    assign w1_output_idx = (qns2_to_w0_idx + 16) >> 5;
+    assign w1_output_idx = (qns2_to_w0_idx + 17) >> 5; // think more
 
-    mod2 #( 
+    qns #( 
             .IN_W   (`W_COEFF_W), 
-            .OUT_W  (`QNS_OUT_W),
-            .YY_FS  (`QNS_LEVEL_2)
+            .R_IN   (`R_W_COEFF),
+            .OUT_W  (8),
+            .R_OUT  (6),
+            .LEVEL  (2) // in r_out
     ) qns2
     (   
         .clock      (clock),
         .reset      (reset),
-        .valid_in   (bootup_done), // TODO: think more about this, possibly extrapolate to more places
-        .in         (w1_output_coeff),
-        .out        (qns2_out_data),
-        .out_scaled (),
+        .valid_in   (bootup_done),
+        .x_in         (w1_output_coeff >>> 5),
+        .y_out        (qns2_out_data),
         .valid_out  (qns2_to_w0_valid)
     );
 
     always_comb
     begin
-        if (qns2_out_data == -3)
+        if (qns2_out_data == -3*(2**6))
         begin
             qns2_to_w0_data = 2'b00;
         end
-        else if (qns2_out_data == 3)
+        else if (qns2_out_data == 3*(2**6))
         begin
             qns2_to_w0_data = 2'b01;
         end
-        else if (qns2_out_data == -1)
+        else if (qns2_out_data == -1*(2**6))
         begin
             qns2_to_w0_data = 2'b10;
         end
@@ -465,7 +441,5 @@ module top
             qns2_to_w0_data = 2'b11;
         end
     end
-
-    
 
 endmodule

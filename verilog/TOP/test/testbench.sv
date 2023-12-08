@@ -6,7 +6,7 @@ module testbench;
     localparam NUM_DP = 96000;
     localparam NUM_SP = 1024;
     localparam NUM_Y0 = 96000;
-    localparam LATENCY = 6;
+    localparam LATENCY = 7;
     localparam LMS_LUT_SIZE = 128;
     localparam UP_RESET_IDX = 12799;
     localparam Y0_RESET_IDX = 12799;
@@ -147,7 +147,6 @@ module testbench;
         begin
             if (y0_valid_out)
             begin
-                $display(y0_num);
                 $fdisplay(y0_out_file, "%d", y0_data_out);
                 $fdisplay(ep_out_file, "%d", ep_data_c);
                 y0_data_VEC[y0_num] <= y0_data_out;

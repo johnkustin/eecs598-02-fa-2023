@@ -26,7 +26,7 @@ all:	simv
 #####
 
 TESTBENCH = test/testbench.sv
-SIMFILES = src/top.sv src/sys_defs.svh ../LMS/src/LMS.sv ../LMS/memory/verilog/SRAM_128_12.v ../Shat/src/Shat.sv ../W/src/W.sv ../W_top/src/W_top.sv ../LPD/src/LPD.sv ../QNS/src/mod2.v
+SIMFILES = src/top.sv src/sys_defs.svh ../LMS/src/LMS.sv ../LMS/memory/verilog/SRAM_128_12.v ../Shat/src/Shat.sv ../W/src/W.sv ../W_top/src/W_top.sv ../LPD/src/LPD.sv ../QNS/src/qns.sv
 SYNFILES = results/LMS.mapped.v memory/verilog/SRAM_128_12.v  
 SYN_SIM_OPTS = +neg_tchk 
 
@@ -60,7 +60,7 @@ syn_NEW:
 		-mv command.log temp_files/
 		-mv default.svf temp_files/
 		-mkdir -p export
-		-cp -f memory/db/*_${MK_MEM_SUFFIX}_ccs.db export/
+		-cp -f ../LMS/memory/db/*_${MK_MEM_SUFFIX}_ccs.db export/
 
 clean:
 	rm -rvf simv *.daidir csrc vcs.key program.out \

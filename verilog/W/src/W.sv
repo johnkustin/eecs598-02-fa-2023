@@ -22,7 +22,7 @@ module W # (parameter N = 32, IN_W = 32, OUT_W = 32, COEFF_W = 32, R_IN = 31, R_
     //                                                 32'h28f5c3, 32'hffe28241, 32'h1205bc, 32'hffeab368};
 
 
-    reg signed [COEFF_W-1:0] w [N];
+    logic signed [COEFF_W-1:0] w [N];
     
     localparam OUT_MAX      = 2**(OUT_W-1)-1;
     localparam OUT_MIN      = -2**(OUT_W-1);

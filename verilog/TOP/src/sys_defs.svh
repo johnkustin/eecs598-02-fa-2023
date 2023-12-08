@@ -51,7 +51,7 @@
 // QNS
 `define QNS_LEVEL_1 2*(2**`R_UP)
 `define QNS_LEVEL_2 2**(`R_W_COEFF-5) // (1/32 * 2^(R_W_COEFF))
-`define QNS_LEVEL_3 4
+`define QNS_LEVEL_3 256
 `define QNS_LEVEL_4 10*(2**`R_EP)
 `define QNS_OUT_W 3
 

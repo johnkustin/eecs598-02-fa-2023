@@ -22,7 +22,7 @@ module W_top #(parameter W_W = 8, R_W = 6, N = 1008, OUT_W = 32, R_OUT = 28, LV0
     logic [1:0] w0 [N];
     logic       w0_valid [N]; // TODO: make this a struct
     logic [1:0] shift_reg [N];
-    logic signed [OUT_W + ($clog2(N))-1:0] data_out_int;
+    logic signed [13:0] data_out_int;
     logic signed [OUT_W-1:0] prod [N];
     logic [1:0] internal_valids;
 
@@ -74,21 +74,11 @@ module W_top #(parameter W_W = 8, R_W = 6, N = 1008, OUT_W = 32, R_OUT = 28, LV0
 
             for (int i = 0; i < N; i = i + 1)
             begin
-                prod[i] <= w0_valid[i] ? (LUT[{(shift_reg[i][0] ^ w0[i][0]), shift_reg[i][1], w0[i][1]}]) <<< SHIFT_VAL : '0;
+                prod[i] <= w0_valid[i] ? ((LUT[{(shift_reg[i][0] ^ w0[i][0]), shift_reg[i][1], w0[i][1]}])) : '0;
             end
 
-            if (data_out_int > OUT_MAX)
-            begin
-                data_out <= OUT_MAX;
-            end
-            else if (data_out_int < OUT_MIN)
-            begin
-                data_out <= OUT_MIN;
-            end
-            else
-            begin
-                data_out <= data_out_int;
-            end
+
+            data_out <= data_out_int;
 
             internal_valids[1]  <= internal_valids[0];
             valid_out           <= internal_valids[1];

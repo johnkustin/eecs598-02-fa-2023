@@ -3,12 +3,12 @@
 module testbench;
     localparam N        = 32;
     localparam K        = 32;
-    localparam MU       = 858993459;
+    localparam MU       = 429496729;
     localparam OFFSET   = 21474836;
     localparam EH_IN_W  = 32;
     localparam U1_IN_W  = 32;
-    localparam OUT_W    = 20;
-    localparam R_EH_IN  = 32;
+    localparam OUT_W    = 32;
+    localparam R_EH_IN  = 31;
     localparam R_OUT    = 31;
     localparam R_U1_IN  = 31;
     localparam R_A_IN   = 4;

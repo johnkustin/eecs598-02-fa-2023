@@ -8,11 +8,11 @@ module mod2 #(
     ) ( 
     input clock,
     input reset,
-    input wire valid_in,
-    input signed [IN_W-1:0] in, // (N,R) = s(19,15) signed
-    output wire signed [OUT_W-1:0] out, // output  signed,
-    output wire signed [IN_W-1:0] out_scaled,
-    output wire valid_out
+    input logic valid_in,
+    input logic signed [IN_W-1:0] in, // (N,R) = s(19,15) signed
+    output logic signed [OUT_W-1:0] out, // output  signed,
+    output logic signed [IN_W-1:0] out_scaled,
+    output logic valid_out
 
 );
 
@@ -23,7 +23,7 @@ reg signed [OUT_W-1:0] v; // yy
 reg valid_internal;
 
 localparam V_SCALING = (IN_W - OUT_W - 1 - 1); // see comments below
-always @(*) begin // 2 bit, bipolar quantizer
+always_comb begin // 2 bit, bipolar quantizer
         yy = inp - (reg1 <<< 1) + reg2; 
         if (yy >= 0) begin
             if (yy >= YY_FS) v = 3'd3; 
@@ -58,13 +58,19 @@ assign valid_out = valid_internal;
 
 always @(posedge clock) begin
         if (reset) begin
-            reg2 <= 0; reg1<= 0; inp <= 0; valid_internal <= 0;
+            reg2 <= '0; 
+            reg1<= '0; 
+            inp <= '0; 
+            valid_internal <= '0;
         end
         else begin
-            valid_internal <= valid_in;
-            inp <= in;
-            reg2 <= reg1; 
-            reg1 <= -e;
+            if (valid_in)
+            begin
+                valid_internal <= valid_in;
+                inp <= in;
+                reg2 <= reg1; 
+                reg1 <= -e;
+            end
         end
 end
 

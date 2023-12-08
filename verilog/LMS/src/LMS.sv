@@ -10,7 +10,7 @@ module LMS # (parameter N = 32, EH_IN_W = 32, U1_IN_W = 32, OUT_W = 32, A_IN_W =
     input logic                             write_lut_in,
     input logic [A_OUT_W-2:0]               write_lut_data,
     input logic [A_IN_W-2:0]                write_lut_idx,
-    output logic signed [OUT_W-1:0]         data_out [N-1:0],
+    output logic signed [OUT_W-1:0]         data_out [N],
     output logic                            valid_out
 );
     // NOTE: R_U1_IN > R_A_IN;
@@ -109,10 +109,10 @@ module LMS # (parameter N = 32, EH_IN_W = 32, U1_IN_W = 32, OUT_W = 32, A_IN_W =
 
     always_comb
     begin
-        denom = OFFSET + ((u_in_r.data * u_in_r.data) >> R_U1_IN);
+        denom = OFFSET + ((u_in_r.data * u_in_r.data) >>> R_U1_IN);
         for (int i = 1; i < N; i = i + 1)
         begin
-            denom = denom + ((shift_reg_r[i] * shift_reg_r[i]) >> R_U1_IN);
+            denom = denom + ((shift_reg_r[i] * shift_reg_r[i]) >>> R_U1_IN);
         end
         denom = denom >>> A_IN_SHIFT;
     end
