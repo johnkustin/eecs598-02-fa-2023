@@ -155,6 +155,7 @@ module testbench;
                 ep_valid_in         <= 1'b1;
                 if (y0_num == NUM_Y0-10) // todo change this to max val and make sense of it
                 begin
+                    $fclose(ep_out_file);
                     $fclose(y0_out_file);
                     $finish;
                 end

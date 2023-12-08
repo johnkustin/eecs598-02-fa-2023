@@ -74,7 +74,7 @@ module top
     // LPD2 -> LMS
     logic signed [`DH_W-1:0] lpd2_data_out;
     logic                    lpd2_valid_out;
-    logic [1:0]              lpd2_valid_out_delay;
+    logic [3:0]              lpd2_valid_out_delay;
 
 
     // EHat(n) -> LMS
@@ -103,10 +103,6 @@ module top
         end
         else
         begin
-            if (lpd2_valid_out)
-            begin
-                $display("%d", lpd2_data_out);
-            end
             if (up_valid_in)
             begin
                 bootup_done <= 1'b1;
@@ -346,7 +342,9 @@ module top
         begin
             lpd2_valid_out_delay[0]         <= lpd2_valid_out;
             lpd2_valid_out_delay[1]         <= lpd2_valid_out_delay[0];
-            ehat_valid                      <= shat2_valid_out && w2_valid_out && lpd2_valid_out_delay[1];
+            lpd2_valid_out_delay[2]         <= lpd2_valid_out_delay[1];
+            lpd2_valid_out_delay[3]         <= lpd2_valid_out_delay[2];
+            ehat_valid                      <= shat2_valid_out && w2_valid_out && lpd2_valid_out_delay[3];
             ehat_data                       <= (lpd2_data_out + shat2_data_out) - w2_data_out;
         end
     end

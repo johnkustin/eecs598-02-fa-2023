@@ -42,7 +42,7 @@ set TYP_HVT_LOWV_LIBRARY_SET      [glob -nocomplain "${PDK_PATH}/lib/stdcell_hvt
 # set MIN_LIBRARY_SET               [glob -nocomplain "${PDK_PATH}/lib/stdcell_rvt/db_ccs/saed32rvt_ff1p16vn40c.db"]
 
 set corner_case "typ"
-set TARGET_LIBRARY_FILES        ${TYP_LIBRARY_SET}
+set TARGET_LIBRARY_FILES        ${TYP_HVT_LOWV_LIBRARY_SET}
 set ADDITIONAL_LINK_LIB_FILES   "[glob -nocomplain ${DESIGN_PATH}/memory/db/*_${MEM_SUFFIX}_ccs.db]
                                    [glob -nocomplain ${DESIGN_PATH}/blocks/*/export/*.db]"
 

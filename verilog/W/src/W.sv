@@ -28,8 +28,11 @@ module W # (parameter N = 32, IN_W = 32, OUT_W = 32, COEFF_W = 32, R_IN = 31, R_
     localparam OUT_MIN      = -2**(OUT_W-1);
     localparam SHIFT_VAL    = R_COEFF + (R_IN - R_OUT);
 
-    logic signed [IN_W-1:0]     shift_reg_r [N-2:0];
-    logic signed [IN_W-1:0]     shift_reg_n [N-2:0];
+    logic signed [IN_W-1:0]     shift_reg [N-1:0];
+
+    logic [1:0] internal_valids;
+
+    logic signed [IN_W*2:0]     prod [N];
 
     logic signed [IN_W*2:0]     sum_n;
 
@@ -39,43 +42,55 @@ module W # (parameter N = 32, IN_W = 32, OUT_W = 32, COEFF_W = 32, R_IN = 31, R_
 
     always_comb
     begin
-        shift_reg_n = shift_reg_r;
         // OUTPUT
-        sum_n     = ((data_in * w[0]) >>> SHIFT_VAL);
+        sum_n     = '0;
         for (int i = 0; i < N-1; i = i + 1)
-            sum_n = sum_n + ((shift_reg_r[i] * w[i+1]) >>> SHIFT_VAL);
-
+            sum_n = sum_n + prod[i];
+        
         if (sum_n > OUT_W'(OUT_MAX))
           final_sum_n = OUT_W'(OUT_MAX);
         else if (sum_n < OUT_W'(OUT_MIN))
           final_sum_n = OUT_W'(OUT_MIN);
         else 
           final_sum_n = sum_n;
-
-        if (valid_in)
-        begin
-            shift_reg_n[0] = data_in;
-            for (int i = 1; i < N-1; i = i + 1)
-              shift_reg_n[i] = shift_reg_r[i-1];
-        end
     end
 
     always @(posedge clock)
     begin
         if (reset)
         begin
-            for (int i = 0; i < N-1; i = i + 1)
-                shift_reg_r[i]  <= '0;
+            for (int i = 0; i < N; i = i + 1)
+            begin
+                shift_reg[i]  <= '0;
+                prod[i]       <= '0;
+            end
+                
             for (int i = 0; i < N; i = i + 1)
                 w[i] <= '0;
             data_out    <= '0;
             valid_out   <= 1'b0;
+            internal_valids <= '0;
         end
         else
         begin
-            shift_reg_r <= shift_reg_n;
+            if (valid_in)
+            begin
+                shift_reg[0] <= data_in;
+                for (int i = 1; i < N; i = i + 1)
+                begin
+                    shift_reg[i] <= shift_reg[i-1];
+                end
+            end
+
+            internal_valids[0] <= valid_in;
+            internal_valids[1] <= internal_valids[0];
+            for (int i = 0; i < N; i = i + 1)
+            begin
+                prod[i] <= ((shift_reg[i] * w[i]) >>> SHIFT_VAL);
+            end
             data_out    <= final_sum_n;
-            valid_out   <= valid_in;
+            valid_out   <= internal_valids[1];
+
             if (weight_load_en) 
             begin
               for (int i = 0; i < N; i = i + 1)
