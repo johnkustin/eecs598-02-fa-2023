@@ -41,6 +41,15 @@ for i in range(len(filtered)):
         downSampled.append(filtered[i])
 
 plt.figure()
-plt.plot(filtered)
+plt.plot(downSampled)
 plt.savefig("data/ep_filtered_ds.png")
 
+e = np.zeros(2488)
+with open ("data/e.txt", 'r') as file:
+    for i, line in enumerate(file):
+        e[i] = float(line.strip())
+
+R = 31
+e = fixedToFloatData(e, R)
+plt.plot(e)
+plt.savefig("data/e.png")

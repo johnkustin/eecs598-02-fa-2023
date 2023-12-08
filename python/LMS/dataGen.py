@@ -44,7 +44,7 @@ with open("../../verilog/LMS/data/uVals.mem", 'w') as file:
             file.write(val + '\n')
 
 N = 32
-R = 32
+R = 31
 valsToWrite = []
 with open("data/eh.txt", 'r') as file:
     for data in file:
